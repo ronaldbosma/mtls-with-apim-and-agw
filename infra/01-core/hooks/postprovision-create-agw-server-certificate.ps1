@@ -11,8 +11,18 @@ param(
     [string]$KeyVaultName = $env:AZURE_KEY_VAULT_NAME,
 
     [Parameter(Mandatory = $false)]
+    [string]$IncludeApplicationGateway = $env:INCLUDE_APPLICATION_GATEWAY,
+
+    [Parameter(Mandatory = $false)]
     [string]$AgwPublicIpAddress = $env:AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE
 )
+
+
+if ($IncludeApplicationGateway -eq "false") {
+    Write-Host "Application Gateway is not included in this deployment. Skipping SSL server certificate creation."
+    exit 0
+}
+
 
 # Validate required parameters
 if ([string]::IsNullOrEmpty($SubscriptionId)) {

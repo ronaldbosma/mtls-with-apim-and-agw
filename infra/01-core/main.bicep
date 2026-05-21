@@ -108,7 +108,7 @@ module assignRolesToDeployer '../99-shared/assign-roles-to-principal.bicep' = {
 output AZURE_ENV_INSTANCE_ID string = instanceId
 
 // Return the names of the resources
-output AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_NAME string = agwPublicIpAddressName
+output AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_NAME string = includeApplicationGateway ? agwPublicIpAddressName : ''
 output AZURE_APPLICATION_INSIGHTS_NAME string = appInsightsSettings.appInsightsName
 output AZURE_KEY_VAULT_NAME string = keyVaultName
 output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = appInsightsSettings.logAnalyticsWorkspaceName

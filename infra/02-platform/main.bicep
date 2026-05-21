@@ -37,7 +37,7 @@ param instanceId string
 param resourceGroupName string
 
 @description('The name of the public IP address for the Application Gateway')
-param agwPublicIpAddressName string
+param agwPublicIpAddressName string = ''
 
 @description('The name of the App Insights instance to use')
 param appInsightsName string
@@ -68,12 +68,16 @@ var apiManagementSettings apiManagementSettingsType = {
   sku: apiManagementSku
 }
 
-var applicationGatewaySettings applicationGatewaySettingsType = {
-  applicationGatewayName: getResourceName('applicationGateway', environmentName, location, instanceId)
-  identityName: getResourceName('managedIdentity', environmentName, location, 'agw-${instanceId}')
-  publicIpAddressName: agwPublicIpAddressName
-  mtlsMode: applicationGatewayMtlsMode
-}
+var applicationGatewaySettings applicationGatewaySettingsType? = !includeApplicationGateway
+  ? null
+  : {
+      applicationGatewayName: getResourceName('applicationGateway', environmentName, location, instanceId)
+      identityName: getResourceName('managedIdentity', environmentName, location, 'agw-${instanceId}')
+      publicIpAddressName: agwPublicIpAddressName != ''
+        ? agwPublicIpAddressName
+        : fail('Application Gateway public IP address name must be provided when Application Gateway is included. (Re)deploy the core layer.')
+      mtlsMode: applicationGatewayMtlsMode
+    }
 
 var virtualNetworkSettings virtualNetworkSettingsType = {
   virtualNetworkName: getResourceName('virtualNetwork', environmentName, location, instanceId)
@@ -119,7 +123,7 @@ module appGateway 'modules/application-gateway.bicep' = if (includeApplicationGa
   params: {
     location: location
     tags: tags
-    applicationGatewaySettings: applicationGatewaySettings
+    applicationGatewaySettings: applicationGatewaySettings!
     subnetId: virtualNetwork!.outputs.agwSubnetId
     apiManagementServiceName: apiManagementSettings.serviceName
     appInsightsName: appInsightsName
@@ -134,7 +138,7 @@ module appGateway 'modules/application-gateway.bicep' = if (includeApplicationGa
 
 // Return the names of the resources
 output AZURE_API_MANAGEMENT_NAME string = apiManagementSettings.serviceName
-output AZURE_APPLICATION_GATEWAY_NAME string = applicationGatewaySettings.applicationGatewayName
+output AZURE_APPLICATION_GATEWAY_NAME string = applicationGatewaySettings.?applicationGatewayName ?? ''
 
 // Return settings
 output AZURE_API_MANAGEMENT_SKU string = apiManagementSettings.sku

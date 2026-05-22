@@ -42,6 +42,7 @@ param logAnalyticsWorkspaceName string
 //=============================================================================
 
 var applicationGatewayName string = applicationGatewaySettings.applicationGatewayName
+var applicationGatewayHostName string = 'agw.mtls-sample.dev'
 
 //=============================================================================
 // Existing Resources
@@ -196,7 +197,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2025-05-01' =
         name: 'https-listener'
         properties: {
           protocol: 'Https'
-          hostName: applicationGatewayName
+          hostName: applicationGatewayHostName
           frontendIPConfiguration: {
             id: resourceId(
               'Microsoft.Network/applicationGateways/frontendIPConfigurations',
@@ -220,7 +221,7 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2025-05-01' =
         name: 'mtls-listener'
         properties: {
           protocol: 'Https'
-          hostName: applicationGatewayName
+          hostName: applicationGatewayHostName
           frontendIPConfiguration: {
             id: resourceId(
               'Microsoft.Network/applicationGateways/frontendIPConfigurations',

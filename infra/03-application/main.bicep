@@ -47,10 +47,3 @@ module unprotectedApi 'unprotected-api/unprotected-api.bicep' = {
     keyVaultName: keyVaultName
   }
 }
-
-//=============================================================================
-// Outputs
-//=============================================================================
-
-// Return configuration values
-output VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API bool = validateCertificateChainInProtectedApi

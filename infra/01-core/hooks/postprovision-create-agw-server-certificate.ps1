@@ -11,7 +11,7 @@ param(
     [string]$KeyVaultName = $env:AZURE_KEY_VAULT_NAME,
 
     [Parameter(Mandatory = $false)]
-    [string]$IncludeApplicationGateway = $env:INCLUDE_APPLICATION_GATEWAY,
+    [string]$IncludeApplicationGateway = $env:INCLUDE_APPLICATION_GATEWAY
 )
 
 

@@ -71,6 +71,12 @@ Once the prerequisites are installed on your machine, you can deploy this templa
    azd up
    ```
 
+   During the first deployment of a new environment, you'll be prompted to specify configuration settings for this template.
+
+   ![Specify configuration during deployment](images/specify-configuration-during-deployment.png)
+
+   The value of `applicationGatewayMtlsMode` will be ignored if the Application Gateway is not included. See [Configuration](#configuration) for more details about these parameters, how they are stored and how to change them later.
+
    See [Troubleshooting](#troubleshooting) if you encounter any issues during deployment.
 
 1. Once the deployment is complete, you can locally modify the application or infrastructure and run `azd up` again to update the resources in Azure.
@@ -89,18 +95,31 @@ azd down --purge
 
 ## Configuration
 
+During the first deployment of a new environment, `azd up` prompts you to select the values for the template configuration settings.
+The values are stored in `.azure/<environment-name>/config.json`.
+During deployment, the values will be sotred in environment variables in `.azure/<environment-name>/.env` and use during deployments an execution of integration tests.
+
+
+If an environment was deployed before and later removed with `azd down`, the environment variables are removed from `.azure/<environment-name>/.env` but the selected values are still stored in `.azure/<environment-name>/config.json` and reused as defaults for clean/initial deployments of that environment.
+
+Use one of the following approaches to change values:
+
+1. Use `azd env set` before deployment to override a value for the next deployment.
+1. Update `.azure/<environment-name>/config.json` to change the default value used for consecutive clean/initial deployments.
+
+Environment variables take precedence over values in `config.json`.
+
 ### API Management SKU
 
 The SKU of the API Management service is configured through the `apiManagementSku` parameter in [main.parameters.json](/infra/02-platform/main.parameters.json). The default is `BasicV2`.
 
-To change it to a different value, like `Developer`, run the following command before deploying the template:
+To change it to a different value, like `Developer`, run the following command:
 
 ```cmd
 azd env set AZURE_API_MANAGEMENT_SKU Developer
 ```
 
 If API Management is already deployed, you cannot change the SKU across tier families in place (for example, from `BasicV2` to `Developer`). See [Troubleshooting](#troubleshooting) for resolution options.
-
 
 > [!NOTE]
 > Certificate chain validation is not supported on v2 tier APIM instances. See [Validate client certificate chain in Protected API](#validate-client-certificate-chain-in-protected-api) for more details.
@@ -111,7 +130,7 @@ By default, the Protected API does not validate the client certificate chain. Th
 
 It can be enabled through the `validateCertificateChainInProtectedApi` parameter in [main.parameters.json](/infra/03-application/main.parameters.json).
 
-To enable it, run the following command before deploying the template:
+To enable it, run the following command:
 
 ```cmd
 azd env set VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API true
@@ -127,7 +146,7 @@ azd provision application
 
 By default, the Application Gateway is included in the deployment. It is configured through the `includeApplicationGateway` parameter in [main.parameters.json](/infra/01-core/main.parameters.json) (core layer) and [main.parameters.json](/infra/02-platform/main.parameters.json) (platform layer).
 
-To exclude the Application Gateway and related resources, run the following command before deploying the template:
+To exclude the Application Gateway and related resources, run the following command:
 
 ```cmd
 azd env set INCLUDE_APPLICATION_GATEWAY false
@@ -144,7 +163,7 @@ Supported values:
 - `Strict`: Application Gateway enforces client certificate authentication during the TLS handshake by requiring a valid client certificate.
 - `Passthrough`: Application Gateway requests a client certificate during the TLS handshake but doesn't terminate the connection if the certificate is missing or invalid. The connection to the backend proceeds regardless of the certificate's presence or validity.
 
-To change the mode to `Passthrough`, run the following command before deploying the template:
+To change the mode to `Passthrough`, run the following command:
 
 ```cmd
 azd env set AZURE_APPLICATION_GATEWAY_MTLS_MODE Passthrough

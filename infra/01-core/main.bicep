@@ -10,7 +10,7 @@ targetScope = 'subscription'
 
 import { getResourceName, generateInstanceId } from '../99-shared/naming-conventions.bicep'
 import { getTemplateTags } from '../99-shared/helpers.bicep'
-import { appInsightsSettingsType, applicationGatewayMtlsModeType } from '../99-shared/settings.bicep'
+import { apimSkuType, appInsightsSettingsType, applicationGatewayMtlsModeType } from '../99-shared/settings.bicep'
 
 //=============================================================================
 // Parameters
@@ -45,15 +45,13 @@ param includeApplicationGateway bool
 })
 param applicationGatewayMtlsMode applicationGatewayMtlsModeType
 
-@description('The SKU of the API Management service to deploy')
+@description('The SKU of the API Management service to deploy. Consumption is not supported because setting "enableClientCertificate" to true makes mTLS mandatory for all APIs, breaking some scenarios.')
 @metadata({
   azd: {
     default: 'BasicV2'
   }
 })
-// Exclude Consumption because setting 'enableClientCertificate' to true makes mTLS mandatory for all APIs,
-// which breaks several demo scenarios that must remain accessible without client certificates.
-param apiManagementSku 'Developer' | 'Basic' | 'Standard' | 'Premium' | 'BasicV2' | 'StandardV2' | 'PremiumV2'
+param apiManagementSku apimSkuType
 
 @description('Indicates whether the Protected API should validate the certificate chain of the client certificate.')
 @metadata({

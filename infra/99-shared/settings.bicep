@@ -1,16 +1,10 @@
 // API Management
 
+// Exclude Consumption because setting 'enableClientCertificate' to true makes mTLS mandatory for all APIs,
+// which breaks several demo scenarios that must remain accessible without client certificates.
 @description('The SKU of the API Management service')
 @export()
-type apimSkuType =
-  | 'Consumption'
-  | 'Developer'
-  | 'Basic'
-  | 'Standard'
-  | 'Premium'
-  | 'BasicV2'
-  | 'StandardV2'
-  | 'PremiumV2'
+type apimSkuType = 'Developer' | 'Basic' | 'Standard' | 'Premium' | 'BasicV2' | 'StandardV2' | 'PremiumV2'
 
 @description('The settings for the API Management service')
 @export()

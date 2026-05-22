@@ -49,7 +49,7 @@ param keyVaultName string
 @description('The name of the Log Analytics workspace to use')
 param logAnalyticsWorkspaceName string
 
-@description('The SKU of the API Management service to deploy')
+@description('The SKU of the API Management service to deploy. Consumption is not supported because setting "enableClientCertificate" to true makes mTLS mandatory for all APIs, breaking some scenarios.')
 param apiManagementSku apimSkuType
 
 @description('Whether to include the Application Gateway in the deployment')

@@ -16,6 +16,7 @@ public class ApplicationGatewayTests
     private static X509Certificate2? s_expiredClientCertificate;
     private static X509Certificate2? s_notYetValidClientCertificate;
 
+    private const string APPLICATION_GATEWAY_HOST_NAME = "agw.mtls-sample.dev";
     private const int HTTPS_PORT = 443;
     private const int MTLS_PORT = 53029;
 
@@ -54,7 +55,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_ValidClientCertificate_200OkReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_validClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_validClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -72,7 +73,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_NoClientCertificate_ErrorReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -103,7 +104,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_UnregisteredClientCertificate_401UnauthorizedReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_unregisteredClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_unregisteredClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -123,7 +124,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_UntrustedClientCertificate_400BadRequestReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_untrustedClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_untrustedClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -155,7 +156,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_ExpiredClientCertificate_400BadRequestReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_expiredClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_expiredClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -185,7 +186,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwMtlsEndpoint_NotYetValidClientCertificate_400BadRequestReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_notYetValidClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_notYetValidClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
@@ -215,7 +216,7 @@ public class ApplicationGatewayTests
     public async Task ValidateFromAgw_AgwSslEndpoint_PassValidClientCertificateInHeader_401UnauthorizedReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, HTTPS_PORT, Config.ApplicationGatewayHostName!);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, HTTPS_PORT, APPLICATION_GATEWAY_HOST_NAME);
         agwClient.DefaultRequestHeaders.Add("X-Client-Certificate", "-----BEGIN%20CERTIFICATE-----%0AMIIDTjCCAjagAwIBAgIQLufEA4lCPr9M8X%2BQ4LsLkjANBgkqhkiG9w0BAQsFADAq%0AMSgwJgYDVQQDDB9BUElNIFNhbXBsZSBERVYgSW50ZXJtZWRpYXRlIENBMCAXDTI2%0AMDUxNDE0MDc0MVoYDzIwNzYwNTE0MTQwNzQxWjAXMRUwEwYDVQQDDAxWYWxpZCBD%0AbGllbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIMFowR5%2BO%2BlzC%0AS6MogAxhPiHOOFzW9H0Y86dD2zn421A%2Fytkqfpefmm0kpr%2BZLyRJ9wqOFGszciBe%0Amz6x01YzK9tVcLOP7BPe9hKSfFFHO3C9uBWswBTaQ88WRwbnKLFsk7iK7fjHdTdI%0AWxCk4LCiXkz%2FsteUy5dKvWwSSSFR14JIdENFY6%2FJ6qEABITQ%2BZbzFZC1Bsw7pWmt%0A%2F0v%2BdXdp44e3%2B%2BHUXZc%2BdYj9SZ%2BMtTkLf44io64oo63SPfYj%2FrAfwsbk4WvJDuHS%0AR%2FA9EGpfGGKXsewvZDKpZydZq0bLi8C5E5F6HrO2%2BnQzklQpFfSt68qJtMvahUDG%0AeUrsSf79AgMBAAGjgYAwfjAOBgNVHQ8BAf8EBAMCBaAwFwYDVR0RBBAwDoIMVmFs%0AaWQgQ2xpZW50MBMGA1UdJQQMMAoGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFAFeY55E%0AYGtzPUr%2BqcS%2Bqy8TRbKkMB0GA1UdDgQWBBSXE2sqAqcDBF46nEXz6XhH7GBv%2FDAN%0ABgkqhkiG9w0BAQsFAAOCAQEAsPkox8E4lcL79ABBz1feBwJzgNXsWweiZdOW2wPv%0AEmeTk6KY4Tr0SQcLxwOnxhzoAPpyxlr1wPA7uaT0eyrxGNYiN13zHSZv1CLl6e%2Bf%0AHyyFBXJuW1rjBo9lC8rBpPO6TKSDbMjSaMLBIyFBu5Zm93lIPm%2BdnixTCBc5UFjd%0A8%2BgUImcvKvFEOsIgfqu%2BhNZfPrZop89YSEBjfXzZim8IL2wR0rcSKZUWzDZrTBm2%0AO2HeBTQhD6eg8uobvMUVdODmBDhpfVI6sO35%2BG%2Bd1Ael4yUpHtZAVcavp3h6aNHI%0A8iWB9JcHF0vAi3R%2FIeyV6CagmxWQ9wncDxnGHSySMGOBLQ%3D%3D%0A-----END%20CERTIFICATE-----%0A");
 
         // Act
@@ -236,7 +237,7 @@ public class ApplicationGatewayTests
     public async Task ValidateUsingPolicy_AgwMtlsEndpoint_ValidClientCertificate_401UnauthorizedReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_validClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_validClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-using-policy");
@@ -254,7 +255,7 @@ public class ApplicationGatewayTests
     public async Task ValidateUsingContext_AgwMtlsEndpoint_ValidClientCertificate_401UnauthorizedReturned()
     {
         // Arrange
-        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, Config.ApplicationGatewayHostName!, s_validClientCertificate);
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME, s_validClientCertificate);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-using-context");

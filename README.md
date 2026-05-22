@@ -97,15 +97,14 @@ azd down --purge
 
 During the first deployment of a new environment, `azd up` prompts you to select the values for the template configuration settings.
 The values are stored in `.azure/<environment-name>/config.json`.
-During deployment, the values will be sotred in environment variables in `.azure/<environment-name>/.env` and use during deployments an execution of integration tests.
-
+During deployment, the values are stored as environment variables in `.azure/<environment-name>/.env` and used by deployments and integration tests.
 
 If an environment was deployed before and later removed with `azd down`, the environment variables are removed from `.azure/<environment-name>/.env` but the selected values are still stored in `.azure/<environment-name>/config.json` and reused as defaults for clean/initial deployments of that environment.
 
 Use one of the following approaches to change values:
 
 1. Use `azd env set` before deployment to override a value for the next deployment.
-1. Update `.azure/<environment-name>/config.json` to change the default value used for consecutive clean/initial deployments.
+1. Update `.azure/<environment-name>/config.json` to change the default values used for consecutive clean/initial deployments.
 
 Environment variables take precedence over values in `config.json`.
 
@@ -153,6 +152,13 @@ azd env set INCLUDE_APPLICATION_GATEWAY false
 ```
 
 Note that the Application Gateway will not be removed if it's already deployed, this setting is disabled, and `azd up` or `azd provision` is executed again. You will need to manually remove the resources from the Azure portal or use `azd down --purge` to remove the entire environment.
+
+If the Application Gateway is currently not deployed and you change this setting to `true`, redeploy both the core and platform layer to apply the change:
+
+```cmd
+azd provision core
+azd provision platform
+```
 
 ### Application Gateway mTLS Mode
 

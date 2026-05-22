@@ -12,9 +12,6 @@ param(
 
     [Parameter(Mandatory = $false)]
     [string]$IncludeApplicationGateway = $env:INCLUDE_APPLICATION_GATEWAY,
-
-    [Parameter(Mandatory = $false)]
-    [string]$AgwPublicIpAddress = $env:AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE
 )
 
 
@@ -33,10 +30,6 @@ if ([string]::IsNullOrEmpty($KeyVaultName)) {
     throw "KeyVaultName parameter is required. Please provide it as a parameter or set the AZURE_KEY_VAULT_NAME environment variable."
 }
 
-if ([string]::IsNullOrEmpty($AgwPublicIpAddress)) {
-    throw "AgwPublicIpAddress parameter is required. Please provide it as a parameter or set the AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE environment variable."
-}
-
 
 # First, ensure the Azure CLI is logged in and set to the correct subscription
 az account set --subscription $SubscriptionId
@@ -44,18 +37,18 @@ if ($LASTEXITCODE -ne 0) {
     throw "Unable to set the Azure subscription. Please make sure that you're logged into the Azure CLI with the same credentials as the Azure Developer CLI."
 }
 
-# Generate a unique certificate name
+
 $certificateName = "agw-ssl-server-certificate"
+$applicationGatewayHostName = "agw.mtls-sample.dev"
 
 # Create a self-signed SSL server certificate in Key Vault
-$dnsName = $AgwPublicIpAddress
-Write-Host "Creating self-signed server certificate '$certificateName' in Key Vault '$KeyVaultName' for DNS name '$dnsName'..."
+Write-Host "Creating self-signed server certificate '$certificateName' in Key Vault '$KeyVaultName' for DNS name '$applicationGatewayHostName'..."
 
 $certificatePolicy = @{
     "issuerParameters"          = @{ "name" = "Self" }
     "keyProperties"             = @{ "exportable" = $true; "keyType" = "RSA"; "keySize" = 2048; "reuseKey" = $false }
     "secretProperties"          = @{ "contentType" = "application/x-pkcs12" }
-    "x509CertificateProperties" = @{ "subject" = "CN=$dnsName"; "dnsNames" = @($dnsName); "validityInMonths" = 12 }
+    "x509CertificateProperties" = @{ "subject" = "CN=$applicationGatewayHostName"; "dnsNames" = @($applicationGatewayHostName); "validityInMonths" = 12 }
     "lifetimeActions"           = @(@{ "trigger" = @{ "lifetimePercentage" = 80 }; "action" = @{ "actionType" = "AutoRenew" } })
 }
 

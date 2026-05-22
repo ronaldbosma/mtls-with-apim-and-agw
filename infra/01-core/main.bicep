@@ -34,8 +34,8 @@ param environmentName string
 param includeApplicationGateway bool
 
 // The following parameters are not used in this layer, but in the platform and application layers.
-// They are defined here so the user is asked for them at the start of deployment.
-// Simplify the deployment experience by avoiding asking for the same parameters multiple times in different layers.
+// They are defined here so the user is prompted for them at the start of deployment.
+// This simplifies the deployment experience by avoiding multiple prompts across layers.
 
 @description('The mode to use for mTLS on the Application Gateway. This value is ignored if the Application Gateway is not included in the deployment.')
 @metadata({

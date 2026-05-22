@@ -63,10 +63,10 @@ internal class IntegrationTestHttpClient : HttpClient
         var handler = new HttpClientHandler();
 
         // If e.g. the base address has an IP address instead of a hostname, the server certificate validation will fail.
-        // Since this is only used for testing purposes, we can safely skip the server certificate validation in such cases.
+        // Since this is only used for testing purposes, we only check that a certificate is present, but we don't validate it further.
         if (skipServerCertificateValidation)
         {
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => cert != null;
         }
 
         if (certificate is not null)

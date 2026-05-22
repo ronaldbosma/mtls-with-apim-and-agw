@@ -110,7 +110,7 @@ Environment variables take precedence over values in `config.json`.
 
 ### API Management SKU
 
-The SKU of the API Management service is configured through the `apiManagementSku` parameter in [main.parameters.json](/infra/02-platform/main.parameters.json). The default is `BasicV2`.
+The SKU of the API Management service is configured through the `apiManagementSku` parameter in [main.parameters.json](/infra/02-platform/main.parameters.json). During the first deployment of a new environment, you're prompted to specify this value.
 
 To change it to a different value, like `Developer`, run the following command:
 
@@ -125,7 +125,7 @@ If API Management is already deployed, you cannot change the SKU across tier fam
 
 ### Validate client certificate chain in Protected API
 
-By default, the Protected API does not validate the client certificate chain. This feature is not supported on v2 tier APIM instances because they [do not support uploading CA certificates](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-ca-certificates). If you enable it on a v2 tier APIM instance, requests that use the self-signed client certificates from this repository will always return `401 Unauthorized`, because APIM will try to validate the certificate chain but the CA chain is not available to APIM.
+During the first deployment of a new environment, you're prompted to specify whether the Protected API should validate the client certificate chain. This feature is not supported on v2 tier APIM instances because they [do not support uploading CA certificates](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-ca-certificates). If you enable it on a v2 tier APIM instance, requests that use the self-signed client certificates from this repository will always return `401 Unauthorized`, because APIM will try to validate the certificate chain but the CA chain is not available to APIM.
 
 It can be enabled through the `validateCertificateChainInProtectedApi` parameter in [main.parameters.json](/infra/03-application/main.parameters.json).
 
@@ -143,7 +143,7 @@ azd provision application
 
 ### Include Application Gateway
 
-By default, the Application Gateway is included in the deployment. It is configured through the `includeApplicationGateway` parameter in [main.parameters.json](/infra/01-core/main.parameters.json) (core layer) and [main.parameters.json](/infra/02-platform/main.parameters.json) (platform layer).
+Whether the Application Gateway is included in the deployment is configured through the `includeApplicationGateway` parameter in [main.parameters.json](/infra/01-core/main.parameters.json) (core layer) and [main.parameters.json](/infra/02-platform/main.parameters.json) (platform layer). During the first deployment of a new environment, you're prompted to specify this value.
 
 To exclude the Application Gateway and related resources, run the following command:
 
@@ -162,7 +162,7 @@ azd provision platform
 
 ### Application Gateway mTLS Mode
 
-The mTLS mode for Application Gateway is configured through the `applicationGatewayMtlsMode` parameter in [main.parameters.json](/infra/02-platform/main.parameters.json). The default is `Strict`.
+The mTLS mode for Application Gateway is configured through the `applicationGatewayMtlsMode` parameter in [main.parameters.json](/infra/02-platform/main.parameters.json). During the first deployment of a new environment, you're prompted to specify this value.
 
 Supported values:
 

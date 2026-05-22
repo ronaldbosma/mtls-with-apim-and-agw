@@ -10,6 +10,15 @@
     },
     "includeApplicationGateway": {
       "value": "${INCLUDE_APPLICATION_GATEWAY}"
+    },
+    "applicationGatewayMtlsMode": {
+      "value": "${AZURE_APPLICATION_GATEWAY_MTLS_MODE}"
+    },
+    "apiManagementSku": {
+      "value": "${AZURE_API_MANAGEMENT_SKU}"
+    },
+    "validateCertificateChainInProtectedApi": {
+      "value": "${VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API}"
     }
   }
 }

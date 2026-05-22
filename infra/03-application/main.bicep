@@ -18,11 +18,6 @@ param apiManagementServiceName string
 param keyVaultName string
 
 @description('Indicates whether the Protected API should validate the certificate chain of the client certificate.')
-@metadata({
-  azd: {
-    default: false
-  }
-})
 param validateCertificateChainInProtectedApi bool
 
 //=============================================================================
@@ -52,10 +47,3 @@ module unprotectedApi 'unprotected-api/unprotected-api.bicep' = {
     keyVaultName: keyVaultName
   }
 }
-
-//=============================================================================
-// Outputs
-//=============================================================================
-
-// Return configuration values
-output VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API bool = validateCertificateChainInProtectedApi

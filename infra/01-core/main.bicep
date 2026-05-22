@@ -26,6 +26,11 @@ param location string
 param environmentName string
 
 @description('Whether to include the Application Gateway in the deployment')
+@metadata({
+  azd: {
+    default: true
+  }
+})
 param includeApplicationGateway bool
 
 //=============================================================================

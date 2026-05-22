@@ -27,13 +27,13 @@
       "value": "${AZURE_LOG_ANALYTICS_WORKSPACE_NAME}"
     },
     "apiManagementSku": {
-      "value": "${AZURE_API_MANAGEMENT_SKU=BasicV2}"
+      "value": "${AZURE_API_MANAGEMENT_SKU}"
     },
     "includeApplicationGateway": {
       "value": "${INCLUDE_APPLICATION_GATEWAY}"
     },
     "applicationGatewayMtlsMode": {
-      "value": "${AZURE_APPLICATION_GATEWAY_MTLS_MODE=Strict}"
+      "value": "${AZURE_APPLICATION_GATEWAY_MTLS_MODE}"
     }
   }
 }

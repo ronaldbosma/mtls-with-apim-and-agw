@@ -49,6 +49,11 @@ param keyVaultName string
 param logAnalyticsWorkspaceName string
 
 @description('The SKU of the API Management service to deploy')
+@metadata({
+  azd: {
+    default: 'BasicV2'
+  }
+})
 // Exclude Consumption because setting 'enableClientCertificate' to true makes mTLS mandatory for all APIs,
 // which breaks several demo scenarios that must remain accessible without client certificates.
 param apiManagementSku 'Developer' | 'Basic' | 'Standard' | 'Premium' | 'BasicV2' | 'StandardV2' | 'PremiumV2'
@@ -57,6 +62,11 @@ param apiManagementSku 'Developer' | 'Basic' | 'Standard' | 'Premium' | 'BasicV2
 param includeApplicationGateway bool
 
 @description('The mode to use for mTLS on the Application Gateway')
+@metadata({
+  azd: {
+    default: 'Strict'
+  }
+})
 param applicationGatewayMtlsMode applicationGatewayMtlsModeType
 
 //=============================================================================

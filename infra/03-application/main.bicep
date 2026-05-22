@@ -18,6 +18,11 @@ param apiManagementServiceName string
 param keyVaultName string
 
 @description('Indicates whether the Protected API should validate the certificate chain of the client certificate.')
+@metadata({
+  azd: {
+    default: false
+  }
+})
 param validateCertificateChainInProtectedApi bool
 
 //=============================================================================

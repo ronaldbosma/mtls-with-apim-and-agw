@@ -41,6 +41,21 @@ if ($LASTEXITCODE -ne 0) {
 $certificateName = "agw-ssl-server-certificate"
 $applicationGatewayHostName = "agw.mtls-sample.dev"
 
+
+# Skip certificate creation when it already exists
+Write-Host "Checking if certificate '$certificateName' already exists in Key Vault '$KeyVaultName'..."
+$existingCert = az keyvault certificate show `
+    --vault-name $KeyVaultName `
+    --name $certificateName `
+    --query "id" `
+    --output tsv 2>$null
+
+if ($existingCert) {
+    Write-Host "Certificate '$certificateName' already exists in Key Vault '$KeyVaultName'. Skipping creation."
+    exit 0
+}
+
+
 # Create a self-signed SSL server certificate in Key Vault
 Write-Host "Creating self-signed server certificate '$certificateName' in Key Vault '$KeyVaultName' for DNS name '$applicationGatewayHostName'..."
 
@@ -52,18 +67,25 @@ $certificatePolicy = @{
     "lifetimeActions"           = @(@{ "trigger" = @{ "lifetimePercentage" = 80 }; "action" = @{ "actionType" = "AutoRenew" } })
 }
 
-
 # Write the certificate policy to a temporary file to avoid PowerShell/CLI JSON quoting issues
 $tempPolicyFile = [System.IO.Path]::GetTempFileName()
 $certificatePolicy | ConvertTo-Json -Depth 10 | Set-Content -Path $tempPolicyFile -Encoding UTF8
 
-# Create the certificate using the @<file> syntax
-az keyvault certificate create --vault-name $KeyVaultName --name $certificateName --policy @$tempPolicyFile
-if ($LASTEXITCODE -ne 0) {
-    Remove-Item $tempPolicyFile -ErrorAction SilentlyContinue
-    throw "Failed to create self-signed certificate '$certificateName' in Key Vault '$KeyVaultName'."
+try {
+    # Create the certificate using the @<file> syntax
+    az keyvault certificate create `
+        --vault-name $KeyVaultName `
+        --name $certificateName `
+        --policy @$tempPolicyFile `
+        --output none
+
+    if ($LASTEXITCODE -ne 0) {
+        Remove-Item $tempPolicyFile -ErrorAction SilentlyContinue
+        throw "Failed to create self-signed certificate '$certificateName' in Key Vault '$KeyVaultName'."
+    }
+
+    Write-Host "Certificate '$certificateName' created successfully in Key Vault '$KeyVaultName'."
 }
-
-Remove-Item $tempPolicyFile -ErrorAction SilentlyContinue
-
-Write-Host "Certificate '$certificateName' created successfully in Key Vault '$KeyVaultName'."
+finally {
+    Remove-Item $tempPolicyFile -ErrorAction SilentlyContinue
+}

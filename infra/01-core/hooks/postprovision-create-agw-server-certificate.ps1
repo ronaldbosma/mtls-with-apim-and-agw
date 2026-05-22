@@ -1,6 +1,6 @@
 <#
   This PowerShell script is executed after the core layer is provisioned.
-  It will create a self-signed SSL server certificate for the IP address of the Application Gateway in Key Vault.
+  It will create a self-signed SSL server certificate for the Application Gateway in Key Vault.
 #>
 
 param(

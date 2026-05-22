@@ -216,7 +216,7 @@ This template has several hooks that are executed at different stages of the dep
 These PowerShell scripts are executed after the the core layer is provisioned.
 
 - [postprovision-create-agw-server-certificate.ps1](infra/01-core/hooks/postprovision-create-agw-server-certificate.ps1):  
-  This script creates a self-signed SSL server certificate for the IP address of the Application Gateway in Key Vault.
+  This script creates a self-signed SSL server certificate for the Application Gateway in Key Vault.
 
 - [postprovision-import-client-certificates.ps1](infra/01-core/hooks/postprovision-import-client-certificates.ps1):  
   This script imports the necessary certificates into Key Vault.

@@ -152,9 +152,9 @@ output AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE string = agwPublicIpAdd
 output AZURE_KEY_VAULT_URI string = keyVault.outputs.vaultUri
 
 // Return which services are included in the deployment
-output INCLUDE_APPLICATION_GATEWAY bool = includeApplicationGateway
 
 // Return settings
 output AZURE_API_MANAGEMENT_SKU string = apiManagementSku
 output AZURE_APPLICATION_GATEWAY_MTLS_MODE string = includeApplicationGateway ? applicationGatewayMtlsMode : ''
+output INCLUDE_APPLICATION_GATEWAY bool = includeApplicationGateway
 output VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API bool = validateCertificateChainInProtectedApi

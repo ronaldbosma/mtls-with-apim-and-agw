@@ -71,7 +71,7 @@ Host: agw.mtls-sample.dev
 ###
 
 # Call validate-from-agw directly on API Management with the public part of a valid client certificate in the `X-Client-Certificate` header.
-# This request succeeds, demonstrating the importants of network isolation and defense in depth where possible.
+# This request succeeds, demonstrating the importance of network isolation and defense in depth where possible.
 
 GET https://{{apimHostname}}/protected/validate-from-agw
 X-Client-Certificate: {{validClientCertificate}}

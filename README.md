@@ -1,6 +1,6 @@
 # mTLS with Azure API Management and Application Gateway
 
-An `azd` template using Bicep that demonstrates mutual TLS (mTLS) with Azure API Management. It shows how to validate client certificates when calling API Management directly and when API Management is behind an Application Gateway. It also demonstrates how to securing connections from API Management to backend systems using mTLS.
+An `azd` template using Bicep that demonstrates mutual TLS (mTLS) with Azure API Management and Application Gateway. It shows how to validate client certificates when calling API Management directly and when API Management is behind an Application Gateway. It also demonstrates how to securing connections from API Management to backend systems using mTLS.
 
 ## Overview
 
@@ -128,7 +128,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 
 ### Demo
 
-See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management.
+See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management and Application Gateway.
 
 ### Clean up
 

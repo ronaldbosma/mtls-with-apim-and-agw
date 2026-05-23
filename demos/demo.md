@@ -1,6 +1,6 @@
 # mTLS with API Management - Demo
 
-This demo shows how mutual TLS (mTLS) can be used with Azure API Management. The template deploys an API Management service with two APIs: a Protected API that validates client certificates, and an Unprotected API that acts as an mTLS client itself when calling the Protected API as a backend. An optional Application Gateway sits in front of API Management to handle client certificate validation at the network edge.
+This demo shows how mutual TLS (mTLS) can be used with Azure API Management and Application Gateway. The template deploys an API Management service with two APIs: a Protected API that validates client certificates, and an Unprotected API that acts as an mTLS client itself when calling the Protected API as a backend. An optional Application Gateway sits in front of API Management to handle client certificate validation at the network edge.
 
 See the following diagram for an overview:
 

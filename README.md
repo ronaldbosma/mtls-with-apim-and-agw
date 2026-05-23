@@ -34,11 +34,11 @@ After the core layer is provisioned, the [self-signed client certificates](./sel
 **Application layer** deploys two APIs in API Management:
 
 - **Protected API**: Validates the client certificate of the caller. It has three operations:
-  - [validate-using-policy.operation](./infra/03-application/protected-api/validate-using-policy.operation.xml):  
+  - [validate-using-policy](./infra/03-application/protected-api/validate-using-policy.operation.xml):  
     Validates the client certificate using the [validate-client-certificate](https://learn.microsoft.com/en-us/azure/api-management/validate-client-certificate-policy) policy.
-  - [validate-using-context.operation](./infra/03-application/protected-api/validate-using-context.operation.xml):  
+  - [validate-using-context](./infra/03-application/protected-api/validate-using-context.operation.xml):  
     Validates the client certificate using the `context.Request.Certificate` property in a [policy expression](https://learn.microsoft.com/en-us/azure/api-management/api-management-policy-expressions).
-  - [validate-from-agw.operation](./infra/03-application/protected-api/validate-from-agw.operation.xml):  
+  - [validate-from-agw](./infra/03-application/protected-api/validate-from-agw.operation.xml):  
     Validates the client certificate that was forwarded by the Application Gateway in a header.
 - **Unprotected API**: Does not validate client certificates from the caller, but acts as an mTLS client itself when forwarding requests to the Protected API as its mTLS-protected backend. It retrieves a client certificate from Key Vault and uses it to authenticate against the Protected API.
 

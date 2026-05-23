@@ -59,8 +59,11 @@
 					<message>@("Client certificate validation failed: " + context.Variables.GetValueOrDefault<string>("certificateValidationResult"))</message>
 				</trace>
                 <return-response>
-                    <!-- Include error reason for demo purposes. Don't expose sensitive information in production and use a generic error message instead. -->
-                    <set-status code="401" reason='@(context.Variables.GetValueOrDefault<string>("certificateValidationResult"))' />
+                    <!-- Include error reason and received certificate for demo purposes. Don't expose sensitive information in production and use a generic error message instead. -->
+                    <set-status code="401" />
+                    <set-header name="ErrorReason" exists-action="override">
+                        <value>@(context.Variables.GetValueOrDefault<string>("certificateValidationResult"))</value>
+                    </set-header>
                     <set-header name="X-Client-Certificate-Received-By-APIM" exists-action="override">
                         <value>@(context.Request.Headers.GetValueOrDefault("X-Client-Certificate"))</value>
                     </set-header>

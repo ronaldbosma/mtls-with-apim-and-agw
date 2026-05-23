@@ -89,15 +89,12 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("No required SSL certificate was sent", content);
+            ResponseAssert.HasContent(response, "No required SSL certificate was sent");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateNotFound", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
         }
     }
 
@@ -118,8 +115,7 @@ public class Scenario2Tests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateIdentityNotMatched", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
     }
 
     /// <summary>
@@ -140,17 +136,13 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            ResponseAssert.HasContent(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-
-            var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
-            Assert.AreEqual(expectedReason, response.ReasonPhrase);
+            var expectedErrorReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
+            ResponseAssert.HasErrorReason(response, expectedErrorReason);
         }
     }
 
@@ -172,15 +164,12 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            ResponseAssert.HasContent(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateExpired", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
         }
     }
 
@@ -202,15 +191,12 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            ResponseAssert.HasContent(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateNotYetValid", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
         }
     }
 
@@ -231,8 +217,7 @@ public class Scenario2Tests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateNotFound", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
     }
 
     /// <summary>

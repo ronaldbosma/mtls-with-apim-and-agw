@@ -10,8 +10,7 @@ internal class ResponseAssert
 
     public static void HasErrorReason(HttpResponseMessage response, string expectedErrorReason)
     {
-        var errorReason = response.Headers.GetValues("ErrorReason").FirstOrDefault();
-        Assert.IsNotNull(errorReason, "ErrorReason header is missing.");
-        Assert.AreEqual(expectedErrorReason, errorReason);
+        Assert.IsTrue(response.Headers.Any(h => h.Key == "ErrorReason"), "ErrorReason header is missing.");
+        Assert.AreEqual(expectedErrorReason, response.Headers.GetValues("ErrorReason").FirstOrDefault());
     }
 }

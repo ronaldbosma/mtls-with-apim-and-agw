@@ -128,7 +128,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 
 ### Demo
 
-See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check and demonstrate different mTLS scenarios with API Management.
+See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management.
 
 ### Clean up
 

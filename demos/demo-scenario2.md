@@ -120,7 +120,7 @@ X-Client-Certificate: <url-encoded-certificate>
 This returns `401 Unauthorized` with `ClientCertificateNotFound` — the rewrite rule on the HTTPS listener strips the header before the request reaches API Management, so the spoofing attempt is blocked.
 
 > [!NOTE]
-> The test file [tests/scenario2.http](../tests/scenario2.http) includes a pre-built request with a valid certificate value for this demonstration.The integration test `ValidateFromAgw_AgwSslEndpoint_PassValidClientCertificateInHeader_401UnauthorizedReturned` in `Scenario2Tests.cs` verifies this behaviour automatically.
+> The test file [tests/scenario2.http](../tests/scenario2.http) includes a pre-built request with a valid certificate value for this demonstration. The integration test `ValidateFromAgw_AgwSslEndpoint_PassValidClientCertificateInHeader_401UnauthorizedReturned` in `Scenario2Tests.cs` verifies this behaviour automatically.
 
 **Directly against API Management (bypassing the Application Gateway)**
 

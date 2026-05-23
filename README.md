@@ -91,7 +91,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 1. Run the `azd init` command in an empty directory with the `--template` parameter to clone this template into the current directory.
 
    ```cmd
-   azd init --template ronaldbosma/mtls-with-apim
+   azd init --template ronaldbosma/mtls-with-apim-and-agw
    ```
 
    When prompted, specify the name of the environment, for example, `mtlsapim`. The maximum length is 32 characters.

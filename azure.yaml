@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: mtls-with-apim
+name: mtls-with-apim-and-agw
 metadata:
-  template: mtls-with-apim@0.0.0
+  template: mtls-with-apim-and-agw@0.0.0
 infra:
   layers:
     - name: core

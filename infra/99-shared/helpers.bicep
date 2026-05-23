@@ -12,5 +12,5 @@ func getApiManagementFqdn(apimServiceName string) string => '${apimServiceName}.
 @export()
 func getTemplateTags(environmentName string) { *: string } => {
   'azd-env-name': environmentName
-  'azd-template': 'ronaldbosma/mtls-with-apim'
+  'azd-template': 'ronaldbosma/mtls-with-apim-and-agw'
 }

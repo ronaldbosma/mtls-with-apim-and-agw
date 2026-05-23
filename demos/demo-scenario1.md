@@ -32,7 +32,7 @@ This operation uses the `context.Request.Certificate` property in a policy expre
 - The validation is done in a `set-variable` policy that returns a descriptive reason string on failure, or `null` on success.
 - It checks for the presence of a certificate, validates the `NotBefore` and `NotAfter` dates, optionally validates the trust chain using `VerifyNoRevocation()`, and finally checks the thumbprint against the certificates uploaded to API Management (`context.Deployment.Certificates`).
 - The `{{validate-certificate-chain}}` named value controls whether the trust chain is validated, same as the policy-based approach.
-- The rejection reason is included in the HTTP `401` response's reason phrase. This is useful for demos to show exactly why a certificate was rejected.
+- On rejection, the operation returns `401 Unauthorized` with the reason exposed via the `ErrorReason` response header and the JSON response body. This is useful for demos and tests to show exactly why a certificate was rejected.
 
 ### CA certificate uploads
 

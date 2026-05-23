@@ -347,12 +347,12 @@ If you've previously deployed this template and deleted the resources, you may e
 ```json
 {
   "code": "DeploymentFailed",
-  "target": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mtlsapim-nwe-kt2tx/providers/Microsoft.Resources/deployments/apiManagement",
+  "target": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mtlsapim-sdc-j767o/providers/Microsoft.Resources/deployments/apiManagement",
   "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
   "details": [
     {
       "code": "ServiceAlreadyExistsInSoftDeletedState",
-      "message": "Api service apim-mtlsapim-nwe-kt2tx was soft-deleted. In order to create the new service with the same name, you have to either undelete the service or purge it. See https://aka.ms/apimsoftdelete."
+      "message": "Api service apim-mtlsapim-sdc-j767o was soft-deleted. In order to create the new service with the same name, you have to either undelete the service or purge it. See https://aka.ms/apimsoftdelete."
     }
   ]
 }
@@ -361,7 +361,7 @@ If you've previously deployed this template and deleted the resources, you may e
 Use the [az apim deletedservice list](https://learn.microsoft.com/en-us/cli/azure/apim/deletedservice?view=azure-cli-latest#az-apim-deletedservice-list) Azure CLI command to list all deleted API Management services in your subscription. Locate the service that is in a soft-deleted state and purge it using the [purge](https://learn.microsoft.com/en-us/cli/azure/apim/deletedservice?view=azure-cli-latest#az-apim-deletedservice-purge) command. See the following example:
 
 ```cmd
-az apim deletedservice purge --location "norwayeast" --service-name "apim-mtlsapim-nwe-kt2tx"
+az apim deletedservice purge --location "norwayeast" --service-name "apim-mtlsapim-sdc-j767o"
 ```
 
 ### The specified PKCS#12 X.509 certificate content can not be read. Please check if certificate is in valid PKCS#12 format.

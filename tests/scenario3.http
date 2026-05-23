@@ -1,0 +1,25 @@
+#==================================================================================================================================
+# Requests for Scenario 3 — No client certificate validation at the Application Gateway or API Management:
+#
+# A client calls the Unprotected API over regular TLS.
+# The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS.
+# This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
+#==================================================================================================================================
+
+# Configure your API Management host name
+
+@apimHostname = <your-api-management-instance-name>.azure-api.net
+
+
+#===============================================================================
+# Requests to call the Protected API via the Unprotected API
+#===============================================================================
+
+### Call validate-client-certificate on Protected API via Unprotected API
+
+GET https://{{apimHostname}}/unprotected/validate-using-policy
+
+
+### Call validate-using-context on Protected API via Unprotected API
+
+GET https://{{apimHostname}}/unprotected/validate-using-context

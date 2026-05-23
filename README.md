@@ -8,12 +8,52 @@ This template deploys the following resources:
 
 ![Overview](images/diagrams-overview.png)
 
+The infrastructure uses [azd layered provisioning](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/layered-provisioning) _(currently in beta)_ and is organized into three layers:
+
+**Core layer** deploys the foundational resources shared across the other layers:
+
+- Application Insights and Log Analytics workspace for monitoring and logging.
+- Key Vault for securely storing certificates.
+- A public IP address for the Application Gateway _(only when Application Gateway is included)_.
+
+After the core layer is provisioned, the [self-signed client certificates](./self-signed-certificates/) from this repository are imported into Key Vault. A self-signed SSL server certificate for the Application Gateway (FQDN: `agw.mtls-sample.dev`) is also created in Key Vault at this stage. Note that `agw.mtls-sample.dev` is not a registered domain; the public IP address is used during tests.
+
 > [!WARNING]  
 > This repository intentionally includes self-signed certificates (including private keys) **for local development and demo/template convenience only**.
 > In real-world scenarios, **never** commit certificates with private keys to source control.
 > Use proper secret/certificate management and generate certificates as part of your secure environment/tooling.
 > We included these files here to keep this template easy to use without adding an extra dependency on certificate generation tools (for example, OpenSSL).
 
+**Platform layer** deploys the networking and API infrastructure:
+
+- Virtual Network that hosts the Application Gateway _(only when Application Gateway is included)_.
+- Application Gateway with an HTTPS listener on port `443` and an mTLS listener on port `53029`, acting as the public entry point. It forwards requests to the API Management service.  
+  _(optional; can be excluded via [configuration](#include-application-gateway))_.
+- API Management service. It's deployed in External mode to support scenarios where direct access from the internet is necessary. When fronting it by an Application Gateway, you would normally deploy it inside the Virtual Network in internal mode.
+
+**Application layer** deploys two APIs in API Management:
+
+- **Protected API**: Validates the client certificate of the caller. It has three operations:
+  - [validate-using-policy](./infra/03-application/protected-api/validate-using-policy.operation.xml):  
+    Validates the client certificate using the [validate-client-certificate](https://learn.microsoft.com/en-us/azure/api-management/validate-client-certificate-policy) policy.
+  - [validate-using-context](./infra/03-application/protected-api/validate-using-context.operation.xml):  
+    Validates the client certificate using the `context.Request.Certificate` property in a [policy expression](https://learn.microsoft.com/en-us/azure/api-management/api-management-policy-expressions).
+  - [validate-from-agw](./infra/03-application/protected-api/validate-from-agw.operation.xml):  
+    Validates the client certificate that was forwarded by the Application Gateway.
+- **Unprotected API**: Does not validate client certificates from the caller, but acts as an mTLS client itself when forwarding requests to the Protected API as its mTLS-protected backend. It retrieves a client certificate from Key Vault and uses it to authenticate against the Protected API.
+
+### Scenarios
+
+This template demonstrates the following three scenarios:
+
+**Scenario 1 — Validate client certificates in API Management**  
+A client calls the Protected API directly over mTLS. API Management validates the presented client certificate. This scenario covers multiple validation approaches implemented via APIM policies.
+
+**Scenario 2 — Validate client certificates when API Management is behind an Application Gateway**  
+A client connects to the Application Gateway using mTLS. The Application Gateway can be configured in `Strict` mode (enforcing a valid client certificate) or `Passthrough` mode (forwarding the connection regardless). API Management then processes the client certificate passed on in a request header by the Application Gateway.
+
+**Scenario 3 — Securing backend connections with mTLS**  
+A client calls the Unprotected API over regular TLS. The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS. This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
 
 > [!IMPORTANT]  
 > This template is not production-ready; it uses minimal cost SKUs and omits network isolation, advanced security, governance and resiliency. Harden security, implement enterprise controls and/or replace modules with [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/) before any production use.
@@ -30,6 +70,9 @@ Before you can deploy this template, make sure you have the following tools inst
   - Installing `azd` also installs the following tools:
     - [GitHub CLI](https://cli.github.com)
     - [Bicep CLI](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
+- This template includes several hooks that run at different stages of the deployment process and require the following tools. For more details, see [Hooks](#hooks).
+  - [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+  - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
 **Required Permissions:**
 
@@ -67,7 +110,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 
 1. Before deploying, review the [Configuration](#configuration) section for useful options such as selecting the API Management SKU, enabling certificate chain validation for the protected API, and including or excluding Application Gateway.
 
-1. Run the `azd up` command to provision the resources in your Azure subscription.
+1. Run the `azd up` command to provision the resources in your Azure subscription. The deployment typically takes about 12 minutes for API Management V2 SKUs and up to 35 minutes for other tiers.
 
    ```cmd
    azd up
@@ -85,7 +128,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 
 ### Demo
 
-See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check and demonstrate different mTLS scenarios with API Management.
+See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management.
 
 ### Clean up
 
@@ -344,12 +387,12 @@ If you've previously deployed this template and deleted the resources, you may e
 ```json
 {
   "code": "DeploymentFailed",
-  "target": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mtlsapim-nwe-kt2tx/providers/Microsoft.Resources/deployments/apiManagement",
+  "target": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mtlsapim-sdc-j767o/providers/Microsoft.Resources/deployments/apiManagement",
   "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
   "details": [
     {
       "code": "ServiceAlreadyExistsInSoftDeletedState",
-      "message": "Api service apim-mtlsapim-nwe-kt2tx was soft-deleted. In order to create the new service with the same name, you have to either undelete the service or purge it. See https://aka.ms/apimsoftdelete."
+      "message": "Api service apim-mtlsapim-sdc-j767o was soft-deleted. In order to create the new service with the same name, you have to either undelete the service or purge it. See https://aka.ms/apimsoftdelete."
     }
   ]
 }
@@ -358,7 +401,7 @@ If you've previously deployed this template and deleted the resources, you may e
 Use the [az apim deletedservice list](https://learn.microsoft.com/en-us/cli/azure/apim/deletedservice?view=azure-cli-latest#az-apim-deletedservice-list) Azure CLI command to list all deleted API Management services in your subscription. Locate the service that is in a soft-deleted state and purge it using the [purge](https://learn.microsoft.com/en-us/cli/azure/apim/deletedservice?view=azure-cli-latest#az-apim-deletedservice-purge) command. See the following example:
 
 ```cmd
-az apim deletedservice purge --location "norwayeast" --service-name "apim-mtlsapim-nwe-kt2tx"
+az apim deletedservice purge --location "norwayeast" --service-name "apim-mtlsapim-sdc-j767o"
 ```
 
 ### The specified PKCS#12 X.509 certificate content can not be read. Please check if certificate is in valid PKCS#12 format.

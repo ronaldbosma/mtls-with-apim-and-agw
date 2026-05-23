@@ -40,7 +40,17 @@
                 </trace>
                 <return-response>
                     <!-- Include error reason for demo purposes. Don't expose sensitive information in production and use a generic error message instead. -->
-                    <set-status code="401" reason='@(context.Variables.GetValueOrDefault<string>("certificateValidationResult"))' />
+                    <set-status code="401" />
+                    <set-header name="ErrorReason" exists-action="override">
+                        <value>@(context.Variables.GetValueOrDefault<string>("certificateValidationResult"))</value>
+                    </set-header>
+                    <set-header name="Content-Type" exists-action="override">
+                        <value>application/json</value>
+                    </set-header>
+                    <set-body template="liquid">{
+                        "statusCode": 401,
+                        "message": "{% if context.Variables['certificateValidationResult'] == 'ClientCertificateNotFound' %}Client certificate missing{% else %}Invalid client certificate{% endif %}"
+                    }</set-body>
                 </return-response>
             </when>
         </choose>

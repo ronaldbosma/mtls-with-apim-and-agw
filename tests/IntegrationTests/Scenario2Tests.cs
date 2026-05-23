@@ -6,8 +6,15 @@ using IntegrationTests.Configuration;
 
 namespace IntegrationTests;
 
+/// <summary>
+/// Integration tests for Scenario 2 — Validate client certificates at the Application Gateway:
+///
+/// A client connects to the Application Gateway using mTLS.
+/// The Application Gateway can be configured in `Strict` mode (enforcing a valid client certificate) or `Passthrough` mode (forwarding the connection regardless).
+/// API Management then processes the client certificate passed on in a request header by the Application Gateway.
+/// </summary>
 [TestClass]
-public class ApplicationGatewayTests
+public class Scenario2Tests
 {
     private static readonly TestConfiguration Config = TestConfiguration.Load();
     private static X509Certificate2? s_validClientCertificate;
@@ -19,6 +26,7 @@ public class ApplicationGatewayTests
     private const string APPLICATION_GATEWAY_HOST_NAME = "agw.mtls-sample.dev";
     private const int HTTPS_PORT = 443;
     private const int MTLS_PORT = 53029;
+    private const string VALID_CLIENT_CERTIFICATE_BASE64 = "-----BEGIN%20CERTIFICATE-----%0AMIIDTjCCAjagAwIBAgIQLufEA4lCPr9M8X%2BQ4LsLkjANBgkqhkiG9w0BAQsFADAq%0AMSgwJgYDVQQDDB9BUElNIFNhbXBsZSBERVYgSW50ZXJtZWRpYXRlIENBMCAXDTI2%0AMDUxNDE0MDc0MVoYDzIwNzYwNTE0MTQwNzQxWjAXMRUwEwYDVQQDDAxWYWxpZCBD%0AbGllbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIMFowR5%2BO%2BlzC%0AS6MogAxhPiHOOFzW9H0Y86dD2zn421A%2Fytkqfpefmm0kpr%2BZLyRJ9wqOFGszciBe%0Amz6x01YzK9tVcLOP7BPe9hKSfFFHO3C9uBWswBTaQ88WRwbnKLFsk7iK7fjHdTdI%0AWxCk4LCiXkz%2FsteUy5dKvWwSSSFR14JIdENFY6%2FJ6qEABITQ%2BZbzFZC1Bsw7pWmt%0A%2F0v%2BdXdp44e3%2B%2BHUXZc%2BdYj9SZ%2BMtTkLf44io64oo63SPfYj%2FrAfwsbk4WvJDuHS%0AR%2FA9EGpfGGKXsewvZDKpZydZq0bLi8C5E5F6HrO2%2BnQzklQpFfSt68qJtMvahUDG%0AeUrsSf79AgMBAAGjgYAwfjAOBgNVHQ8BAf8EBAMCBaAwFwYDVR0RBBAwDoIMVmFs%0AaWQgQ2xpZW50MBMGA1UdJQQMMAoGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFAFeY55E%0AYGtzPUr%2BqcS%2Bqy8TRbKkMB0GA1UdDgQWBBSXE2sqAqcDBF46nEXz6XhH7GBv%2FDAN%0ABgkqhkiG9w0BAQsFAAOCAQEAsPkox8E4lcL79ABBz1feBwJzgNXsWweiZdOW2wPv%0AEmeTk6KY4Tr0SQcLxwOnxhzoAPpyxlr1wPA7uaT0eyrxGNYiN13zHSZv1CLl6e%2Bf%0AHyyFBXJuW1rjBo9lC8rBpPO6TKSDbMjSaMLBIyFBu5Zm93lIPm%2BdnixTCBc5UFjd%0A8%2BgUImcvKvFEOsIgfqu%2BhNZfPrZop89YSEBjfXzZim8IL2wR0rcSKZUWzDZrTBm2%0AO2HeBTQhD6eg8uobvMUVdODmBDhpfVI6sO35%2BG%2Bd1Ael4yUpHtZAVcavp3h6aNHI%0A8iWB9JcHF0vAi3R%2FIeyV6CagmxWQ9wncDxnGHSySMGOBLQ%3D%3D%0A-----END%20CERTIFICATE-----%0A";
 
     [ClassInitialize]
     public static async Task ClassInitialize(TestContext context)
@@ -82,15 +90,13 @@ public class ApplicationGatewayTests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("No required SSL certificate was sent", content);
+            await ResponseAssert.ContentContains(response, "No required SSL certificate was sent");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateNotFound", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+            await ResponseAssert.ContentContains(response, "Client certificate missing");
         }
     }
 
@@ -111,8 +117,8 @@ public class ApplicationGatewayTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateIdentityNotMatched", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     /// <summary>
@@ -133,17 +139,14 @@ public class ApplicationGatewayTests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-
-            var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
-            Assert.AreEqual(expectedReason, response.ReasonPhrase);
+            var expectedErrorReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
+            ResponseAssert.HasErrorReason(response, expectedErrorReason);
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -165,15 +168,13 @@ public class ApplicationGatewayTests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateExpired", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -195,15 +196,13 @@ public class ApplicationGatewayTests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-
-            var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("The SSL certificate error", content);
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-            Assert.IsNotNull(response.ReasonPhrase);
-            Assert.AreEqual("ClientCertificateNotYetValid", response.ReasonPhrase);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -217,15 +216,34 @@ public class ApplicationGatewayTests
     {
         // Arrange
         using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, HTTPS_PORT, APPLICATION_GATEWAY_HOST_NAME);
-        agwClient.DefaultRequestHeaders.Add("X-Client-Certificate", "-----BEGIN%20CERTIFICATE-----%0AMIIDTjCCAjagAwIBAgIQLufEA4lCPr9M8X%2BQ4LsLkjANBgkqhkiG9w0BAQsFADAq%0AMSgwJgYDVQQDDB9BUElNIFNhbXBsZSBERVYgSW50ZXJtZWRpYXRlIENBMCAXDTI2%0AMDUxNDE0MDc0MVoYDzIwNzYwNTE0MTQwNzQxWjAXMRUwEwYDVQQDDAxWYWxpZCBD%0AbGllbnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDIMFowR5%2BO%2BlzC%0AS6MogAxhPiHOOFzW9H0Y86dD2zn421A%2Fytkqfpefmm0kpr%2BZLyRJ9wqOFGszciBe%0Amz6x01YzK9tVcLOP7BPe9hKSfFFHO3C9uBWswBTaQ88WRwbnKLFsk7iK7fjHdTdI%0AWxCk4LCiXkz%2FsteUy5dKvWwSSSFR14JIdENFY6%2FJ6qEABITQ%2BZbzFZC1Bsw7pWmt%0A%2F0v%2BdXdp44e3%2B%2BHUXZc%2BdYj9SZ%2BMtTkLf44io64oo63SPfYj%2FrAfwsbk4WvJDuHS%0AR%2FA9EGpfGGKXsewvZDKpZydZq0bLi8C5E5F6HrO2%2BnQzklQpFfSt68qJtMvahUDG%0AeUrsSf79AgMBAAGjgYAwfjAOBgNVHQ8BAf8EBAMCBaAwFwYDVR0RBBAwDoIMVmFs%0AaWQgQ2xpZW50MBMGA1UdJQQMMAoGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFAFeY55E%0AYGtzPUr%2BqcS%2Bqy8TRbKkMB0GA1UdDgQWBBSXE2sqAqcDBF46nEXz6XhH7GBv%2FDAN%0ABgkqhkiG9w0BAQsFAAOCAQEAsPkox8E4lcL79ABBz1feBwJzgNXsWweiZdOW2wPv%0AEmeTk6KY4Tr0SQcLxwOnxhzoAPpyxlr1wPA7uaT0eyrxGNYiN13zHSZv1CLl6e%2Bf%0AHyyFBXJuW1rjBo9lC8rBpPO6TKSDbMjSaMLBIyFBu5Zm93lIPm%2BdnixTCBc5UFjd%0A8%2BgUImcvKvFEOsIgfqu%2BhNZfPrZop89YSEBjfXzZim8IL2wR0rcSKZUWzDZrTBm2%0AO2HeBTQhD6eg8uobvMUVdODmBDhpfVI6sO35%2BG%2Bd1Ael4yUpHtZAVcavp3h6aNHI%0A8iWB9JcHF0vAi3R%2FIeyV6CagmxWQ9wncDxnGHSySMGOBLQ%3D%3D%0A-----END%20CERTIFICATE-----%0A");
+        agwClient.DefaultRequestHeaders.Add("X-Client-Certificate", VALID_CLIENT_CERTIFICATE_BASE64);
 
         // Act
         var response = await agwClient.GetAsync("protected/validate-from-agw");
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateNotFound", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
+    }
+
+    /// <summary>
+    /// The validate-from-agw operation relies on the X-Client-Certificate to verify if a valid client certificate was provided to the Application Gateway on the mTLS endpoint.
+    /// When calling API Management directly (bypassing the Application Gateway), a client could pass the public part of a valid client certificate in the header and 'spoof' a successful mTLS authentication.
+    /// This request succeeds, demonstrating the importance of network isolation and defense in depth where possible.
+    /// </summary>
+    [TestMethod]
+    public async Task ValidateFromAgw_DirectyApimCall_PassValidClientCertificateInHeader_200OkReturned()
+    {
+        // Arrange
+        using var agwClient = new IntegrationTestHttpClient(Config.AzureApiManagementGatewayUrl!);
+        agwClient.DefaultRequestHeaders.Add("X-Client-Certificate", VALID_CLIENT_CERTIFICATE_BASE64);
+
+        // Act
+        var response = await agwClient.GetAsync("protected/validate-from-agw");
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
     }
 
     /// <summary>
@@ -244,6 +262,8 @@ public class ApplicationGatewayTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <summary>
@@ -262,5 +282,7 @@ public class ApplicationGatewayTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 }

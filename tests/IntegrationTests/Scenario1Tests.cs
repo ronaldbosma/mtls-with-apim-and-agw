@@ -7,10 +7,13 @@ using IntegrationTests.Configuration;
 namespace IntegrationTests;
 
 /// <summary>
-/// Integration tests for the Protected API, which is configured to require client certificate authentication in APIM.
+/// Integration tests for Scenario 1 — Validate client certificates in API Management:
+///
+/// A client calls the Protected API directly over mTLS. API Management validates the presented client certificate.
+/// This scenario covers multiple validation approaches implemented via APIM policies.
 /// </summary>
 [TestClass]
-public sealed class ProtectedApiTests
+public sealed class Scenario1Tests
 {
     private static readonly TestConfiguration Config = TestConfiguration.Load();
     private static X509Certificate2? s_validClientCertificate;
@@ -67,10 +70,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.AreEqual("ClientCertificateNotFound", response.Headers.GetValues("ErrorReason").FirstOrDefault());
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Client certificate missing", content);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <remarks>
@@ -87,10 +88,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.AreEqual("ClientCertificateIdentityNotMatched", response.Headers.GetValues("ErrorReason").FirstOrDefault());
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Invalid client certificate", content);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -106,10 +105,8 @@ public sealed class ProtectedApiTests
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
 
         var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
-        Assert.AreEqual(expectedReason, response.Headers.GetValues("ErrorReason").FirstOrDefault());
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Invalid client certificate", content);
+        ResponseAssert.HasErrorReason(response, expectedReason);
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -123,10 +120,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.AreEqual("ClientCertificateExpired", response.Headers.GetValues("ErrorReason").FirstOrDefault());
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Invalid client certificate", content);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -140,10 +135,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.AreEqual("ClientCertificateNotYetValid", response.Headers.GetValues("ErrorReason").FirstOrDefault());
-
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Invalid client certificate", content);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     /// <remarks>
@@ -173,8 +166,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateNotFound", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <remarks>
@@ -191,8 +184,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateIdentityNotMatched", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -206,10 +199,9 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-
         var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
-        Assert.AreEqual(expectedReason, response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, expectedReason);
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -223,8 +215,8 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateExpired", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -238,7 +230,7 @@ public sealed class ProtectedApiTests
 
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-        Assert.IsNotNull(response.ReasonPhrase);
-        Assert.AreEqual("ClientCertificateNotYetValid", response.ReasonPhrase);
+        ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 }

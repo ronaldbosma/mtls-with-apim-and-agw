@@ -1,0 +1,26 @@
+#==================================================================================================================================
+# Requests for Scenario 1 — Validate client certificates in API Management:
+#
+# A client calls the Protected API directly over mTLS. API Management validates the presented client certificate.
+# This scenario covers multiple validation approaches implemented via APIM policies.
+#==================================================================================================================================
+
+
+# Configure your API Management host name
+
+@apimHostname = <your-api-management-instance-name>.azure-api.net
+
+
+#===============================================================================
+# Requests to directly call the Protected API on APIM
+#===============================================================================
+
+### Validates client certificate using validate-client-certificate policy
+
+GET https://{{apimHostname}}/protected/validate-using-policy
+
+
+### Validates client certificate using the context.Request.Certificate property
+
+GET https://{{apimHostname}}/protected/validate-using-context
+

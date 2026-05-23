@@ -13,7 +13,21 @@ See the following diagram for an overview:
 
 ![Overview](/images/diagrams-overview.png)
 
+### Self-signed client certificates
 
+The demo uses a set of self-signed certificates to simulate different client scenarios. These certificates are already included in the repository and are imported into Key Vault during deployment. The following certificate tree is used:
+
+![Self-signed certificates](/images/diagrams-self-signed-certificates.png)
+
+- **APIM Sample Root CA**: the root CA for this sample. Trusted by Application Gateway and, if the API Management tier supports it, also by API Management.
+  - **APIM Sample DEV Intermediate CA**: intermediate CA for the 'dev' environment. Trusted by Application Gateway and, if the API Management tier supports it, also by API Management.
+    - **Valid Client**: registered in API Management as a valid client.
+    - **Unregistered Client**: not registered in API Management; used to verify that unregistered clients are blocked.
+    - **Unprotected API**: used by the Unprotected API when it calls the Protected API over mTLS.
+    - **Expired Client**: an expired certificate used to verify that expired certificates are rejected.
+    - **Not Yet Valid Client**: a certificate with a future start date used to verify that not-yet-valid certificates are rejected.
+  - **APIM Sample TST Intermediate CA**: intermediate CA for another environment. Not trusted by Application Gateway or API Management.
+    - **Untrusted Client**: used to verify that certificates from an untrusted intermediate CA are rejected.
 
 
 

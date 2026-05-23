@@ -36,7 +36,7 @@ Host: agw.mtls-sample.dev
 
 ###
 
-# Calls the validate-from-agw operation. This operation will fail in no client certificate or an invalid client certificate is presented,
+# Calls the validate-from-agw operation. This operation will fail if no client certificate or an invalid client certificate is presented,
 # and will succeed if a valid client certificate is presented.
 # This demonstrates that mTLS is working as expected when calling the Protected API via the Application Gateway.
 

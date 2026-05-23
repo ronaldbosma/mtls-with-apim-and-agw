@@ -8,12 +8,52 @@ This template deploys the following resources:
 
 ![Overview](images/diagrams-overview.png)
 
+The infrastructure uses [azd layered provisioning](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/layered-provisioning) _(currently in beta)_ and is organized into three layers:
+
+**Core layer** deploys the foundational resources shared across the other layers:
+
+- Application Insights and Log Analytics workspace for monitoring and logging.
+- Key Vault for securely storing certificates.
+- A public IP address for the Application Gateway _(only when Application Gateway is included)_.
+
+After the core layer is provisioned, the [self-signed client certificates](./self-signed-certificates/) from this repository are imported into Key Vault. A self-signed SSL server certificate for the Application Gateway (FQDN: `agw.mtls-sample.dev`) is also created in Key Vault at this stage. Note that `agw.mtls-sample.dev` is not a registered domain; the public IP address is used during tests.
+
 > [!WARNING]  
 > This repository intentionally includes self-signed certificates (including private keys) **for local development and demo/template convenience only**.
 > In real-world scenarios, **never** commit certificates with private keys to source control.
 > Use proper secret/certificate management and generate certificates as part of your secure environment/tooling.
 > We included these files here to keep this template easy to use without adding an extra dependency on certificate generation tools (for example, OpenSSL).
 
+**Platform layer** deploys the networking and API infrastructure:
+
+- Virtual Network that hosts the Application Gateway _(only when Application Gateway is included)_.
+- Application Gateway with an HTTPS listener on port `443` and an mTLS listener on port `53029`, acting as the public entry point. It forwards requests to the API Management service.  
+  _(optional; can be excluded via [configuration](#include-application-gateway))_.
+- API Management service. It's deployed in External mode to support scenarios where direct access from the internet is necessary. When fronting it by an Application Gateway, you would normally deploy it inside the Virtual Network in internal mode.
+
+**Application layer** deploys two APIs in API Management:
+
+- **Protected API**: Validates the client certificate of the caller. It has tree operations:
+  - [validate-using-policy.operation.xml](./infra/03-application/protected-api/validate-using-policy.operation.xml):  
+    Validates the client certificate using the [validate-client-certificate](https://learn.microsoft.com/en-us/azure/api-management/validate-client-certificate-policy) policy.
+  - [validate-using-context.operation.xml](./infra/03-application/protected-api/validate-using-context.operation.xml):  
+    Validates the client certificate using the `context.Request.Certificate` property in a [policy expression](https://learn.microsoft.com/en-us/azure/api-management/api-management-policy-expressions).
+  - [validate-from-agw.operation.xml](./infra/03-application/protected-api/validate-from-agw.operation.xml):  
+    Validates the client certificate thas was forwarded by the Application Gateway in a header.
+- **Unprotected API**: Does not validate client certificates from the caller, but acts as an mTLS client itself when forwarding requests to an mTLS-protected backend. Which in this case is the Protected API. It retrieves a client certificate from Key Vault and uses it to authenticate against the Protected API.
+
+### Scenarios
+
+This template demonstrates the following three scenarios:
+
+**Scenario 1 — Validate client certificates in API Management**  
+A client calls the Protected API directly over mTLS. API Management validates the presented client certificate. This scenario covers multiple validation approaches implemented via APIM policies.
+
+**Scenario 2 — Validate client certificates when API Management is behind an Application Gateway**  
+A client connects to the Application Gateway using mTLS. The Application Gateway can be configured in `Strict` mode (enforcing a valid client certificate) or `Passthrough` mode (forwarding the connection regardless). API Management then processes the client certificate passed on in a request header by the Application Gateway.
+
+**Scenario 3 — Securing backend connections with mTLS**  
+A client calls the Unprotected API over regular TLS. The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS. This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
 
 > [!IMPORTANT]  
 > This template is not production-ready; it uses minimal cost SKUs and omits network isolation, advanced security, governance and resiliency. Harden security, implement enterprise controls and/or replace modules with [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/) before any production use.

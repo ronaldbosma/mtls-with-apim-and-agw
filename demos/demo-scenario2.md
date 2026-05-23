@@ -62,7 +62,7 @@ However, if API Management is directly accessible (e.g., not isolated in an inte
 
 ## 2. Test the scenario
 
-Use [tests/scenario2.http](../tests/scenario2.http) for manual testing, or run `Scenario2Tests.cs` from the integration test project. See the [shared testing prerequisites](./demo.md#shared-testing-prerequisites) for setup instructions.
+Use [tests/scenario2.http](../tests/scenario2.http) for manual testing, or run `Scenario2Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
 
 For manual testing, configure your Visual Studio Code user settings to use `<your-application-gateway-ip-address>:53029` as the mTLS endpoint. See the [shared testing instructions](./demo.md#manual-testing-using-visual-studio-code) for details.
 

@@ -80,7 +80,7 @@ This wildcard routing means `GET /unprotected/validate-using-policy` is forwarde
 
 ## 2. Test the scenario
 
-Use [tests/scenario3.http](../tests/scenario3.http) for manual testing, or run `Scenario3Tests.cs` from the integration test project. See the [shared testing prerequisites](./demo.md#shared-testing-prerequisites) for setup instructions.
+Use [tests/scenario3.http](../tests/scenario3.http) for manual testing, or run `Scenario3Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
 
 No client certificate is needed in your REST Client or test configuration — the caller connects using plain TLS. API Management attaches the certificate automatically when calling the backend.
 

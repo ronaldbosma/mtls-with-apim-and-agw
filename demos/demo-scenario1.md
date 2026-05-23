@@ -44,7 +44,7 @@ The root CA (`root-ca`) and the DEV intermediate CA (`dev-intermediate-ca`) are 
 
 ## 2. Test the scenario
 
-Use [tests/scenario1.http](../tests/scenario1.http) for manual testing, or run `Scenario1Tests.cs` from the integration test project. See the [shared testing prerequisites](./demo.md#shared-testing-prerequisites) for setup instructions.
+Use [tests/scenario1.http](../tests/scenario1.http) for manual testing, or run `Scenario1Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
 
 The two operations to test are:
 - `GET /protected/validate-using-policy` — validates using the `validate-client-certificate` policy.

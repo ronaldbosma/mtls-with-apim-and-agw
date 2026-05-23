@@ -71,7 +71,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
-        ResponseAssert.HasContent(response, "Client certificate missing");
+        ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <remarks>
@@ -89,7 +89,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
-        ResponseAssert.HasContent(response, "Invalid client certificate");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -106,7 +106,7 @@ public sealed class Scenario1Tests
 
         var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
         ResponseAssert.HasErrorReason(response, expectedReason);
-        ResponseAssert.HasContent(response, "Invalid client certificate");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -121,7 +121,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
-        ResponseAssert.HasContent(response, "Invalid client certificate");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -136,7 +136,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
-        ResponseAssert.HasContent(response, "Invalid client certificate");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     /// <remarks>
@@ -167,6 +167,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+        ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <remarks>
@@ -184,6 +185,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -199,6 +201,7 @@ public sealed class Scenario1Tests
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         var expectedReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
         ResponseAssert.HasErrorReason(response, expectedReason);
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -213,6 +216,7 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     [TestMethod]
@@ -227,5 +231,6 @@ public sealed class Scenario1Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
+        ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 }

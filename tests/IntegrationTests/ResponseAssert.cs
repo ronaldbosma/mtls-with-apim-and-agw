@@ -2,7 +2,7 @@ namespace IntegrationTests;
 
 internal class ResponseAssert
 {
-    public static void HasContent(HttpResponseMessage response, string expectedContent)
+    public static void ContentContains(HttpResponseMessage response, string expectedContent)
     {
         var content = response.Content.ReadAsStringAsync().Result;
         Assert.IsTrue(content.Contains(expectedContent), $"Response content does not contain expected value. Expected to find: {expectedContent}. Actual content: {content}");

@@ -67,6 +67,13 @@
                     <set-header name="X-Client-Certificate-Received-By-APIM" exists-action="override">
                         <value>@(context.Request.Headers.GetValueOrDefault("X-Client-Certificate"))</value>
                     </set-header>
+                    <set-header name="Content-Type" exists-action="override">
+                        <value>application/json</value>
+                    </set-header>
+                    <set-body template="liquid">{
+                        "statusCode": 401,
+                        "message": "{% if context.Variables['certificateValidationResult'] == 'ClientCertificateNotFound' %}Client certificate missing{% else %}Invalid client certificate{% endif %}"
+                    }</set-body>
                 </return-response>
 			</when>
 		</choose>

@@ -7,7 +7,7 @@
 #==================================================================================================================================
 
 
-# Configure your Application Gatweway's IP address and API Management host name
+# Configure your Application Gateway's IP address and API Management host name
 
 @agwIPAddress = <your-application-gateway-ip-address>
 @apimHostname = <your-api-management-instance-name>.azure-api.net

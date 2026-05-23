@@ -22,8 +22,6 @@ The demo uses a set of self-signed certificates to simulate different client sce
   - **APIM Sample TST Intermediate CA**: intermediate CA for another environment. Not trusted by Application Gateway or API Management.
     - **Untrusted Client**: used to verify that certificates from an untrusted intermediate CA are rejected.
 
-
-
 ## 1. What resources are getting deployed
 
 The following resources will be deployed:
@@ -34,13 +32,13 @@ The following resources will be deployed:
 
 ### Scenarios
 
-The following scenarios are available. Each scenario has its own demo guide with step-by-step instructions. The shared testing prerequisites below apply to all scenarios.
+The following scenarios are available. Each scenario has its own demo guide with step-by-step instructions. The shared testing instructions below apply to all scenarios.
 
 - [Scenario 1 — Validate client certificates in API Management](./demo-scenario1.md)
 - [Scenario 2 — Validate client certificates when API Management is behind an Application Gateway](./demo-scenario2.md)
 - [Scenario 3 — Securing backend connections with mTLS](./demo-scenario3.md)
 
-### Shared testing prerequisites
+### Shared testing instructions
 
 Each scenario can be tested manually using the REST Client extension in Visual Studio Code, or automatically using the .NET integration tests. The setup below applies to all scenarios.
 

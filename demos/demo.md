@@ -90,4 +90,18 @@ The test output logs are not shown by default when running from the command line
 dotnet run
 ```
 
+#### Understanding 401 responses
 
+When a request is rejected by API Management due to a certificate problem, the `401 Unauthorized` response includes the `ErrorReason` header to indicate why the certificate was rejected. For example:
+
+```http
+HTTP/1.1 401 Unauthorized
+ErrorReason: ClientCertificateExpired
+
+{
+  "statusCode": 401,
+  "message": "Invalid client certificate"
+}
+```
+
+The rejection reason is also traced to Application Insights via the `trace` policy, so you can look it up in the Application Insights logs if the response headers are not visible (e.g. when testing via a browser or a tool that does not show raw headers).

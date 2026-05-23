@@ -30,6 +30,9 @@ Before you can deploy this template, make sure you have the following tools inst
   - Installing `azd` also installs the following tools:
     - [GitHub CLI](https://cli.github.com)
     - [Bicep CLI](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
+- This template includes several hooks that run at different stages of the deployment process and require the following tools. For more details, see [Hooks](#hooks).
+  - [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+  - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 
 **Required Permissions:**
 

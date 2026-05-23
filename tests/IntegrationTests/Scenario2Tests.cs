@@ -90,13 +90,13 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            ResponseAssert.ContentContains(response, "No required SSL certificate was sent");
+            await ResponseAssert.ContentContains(response, "No required SSL certificate was sent");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
             ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
-            ResponseAssert.ContentContains(response, "Client certificate missing");
+            await ResponseAssert.ContentContains(response, "Client certificate missing");
         }
     }
 
@@ -118,7 +118,7 @@ public class Scenario2Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateIdentityNotMatched");
-        ResponseAssert.ContentContains(response, "Invalid client certificate");
+        await ResponseAssert.ContentContains(response, "Invalid client certificate");
     }
 
     /// <summary>
@@ -139,14 +139,14 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            ResponseAssert.ContentContains(response, "The SSL certificate error");
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
             var expectedErrorReason = Config.CertificateChainIsValidatedInProtectedApi ? "ClientCertificateNotTrusted" : "ClientCertificateIdentityNotMatched";
             ResponseAssert.HasErrorReason(response, expectedErrorReason);
-            ResponseAssert.ContentContains(response, "Invalid client certificate");
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -168,13 +168,13 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            ResponseAssert.ContentContains(response, "The SSL certificate error");
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
             ResponseAssert.HasErrorReason(response, "ClientCertificateExpired");
-            ResponseAssert.ContentContains(response, "Invalid client certificate");
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -196,13 +196,13 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            ResponseAssert.ContentContains(response, "The SSL certificate error");
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
         }
         else
         {
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
             ResponseAssert.HasErrorReason(response, "ClientCertificateNotYetValid");
-            ResponseAssert.ContentContains(response, "Invalid client certificate");
+            await ResponseAssert.ContentContains(response, "Invalid client certificate");
         }
     }
 
@@ -224,7 +224,7 @@ public class Scenario2Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
-        ResponseAssert.ContentContains(response, "Client certificate missing");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <summary>
@@ -263,7 +263,7 @@ public class Scenario2Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
-        ResponseAssert.ContentContains(response, "Client certificate missing");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 
     /// <summary>
@@ -283,6 +283,6 @@ public class Scenario2Tests
         // Assert
         Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
-        ResponseAssert.ContentContains(response, "Client certificate missing");
+        await ResponseAssert.ContentContains(response, "Client certificate missing");
     }
 }

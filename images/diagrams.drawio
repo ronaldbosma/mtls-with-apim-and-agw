@@ -1,9 +1,12 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.5 Chrome/114.0.5735.243 Electron/25.3.1 Safari/537.36" pages="2">
   <diagram id="Kf3TriKEvnrgLotJysH_" name="overview">
-    <mxGraphModel dx="1712" dy="1001" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2054" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="S4--SR4WXuC2cIqlW8Ci-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="680" width="530" x="70" y="50" as="geometry" />
+        </mxCell>
         <mxCell id="0zLH5bpIe2dzGlFmEs4C-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=bottom;fontStyle=2;align=left;" value="&amp;nbsp;Platform Layer" vertex="1">
           <mxGeometry height="210" width="510" x="80" y="350" as="geometry" />
         </mxCell>

@@ -70,18 +70,19 @@ Host: agw.mtls-sample.dev
 
 ###
 
-# Call validate-from-agw directly on API Management with the public part of a valid client certificate in the `X-Client-Certificate` header.
-# This request succeeds, demonstrating the importance of network isolation and defense in depth where possible.
-
-GET https://{{apimHostname}}/protected/validate-from-agw
-X-Client-Certificate: {{validClientCertificate}}
-
-###
-
 # Call validate-from-agw via Application Gateway with the public part of a valid client certificate in the `X-Client-Certificate` header.
 # This request should fail because the HTTPS listener on the Application Gateway is configured to remove the `X-Client-Certificate` header.
 
 
 GET https://{{agwIPAddress}}:443/protected/validate-from-agw
 Host: agw.mtls-sample.dev
+X-Client-Certificate: {{validClientCertificate}}
+
+
+###
+
+# Call validate-from-agw directly on API Management with the public part of a valid client certificate in the `X-Client-Certificate` header.
+# This request succeeds, demonstrating the importance of network isolation and defense in depth where possible.
+
+GET https://{{apimHostname}}/protected/validate-from-agw
 X-Client-Certificate: {{validClientCertificate}}

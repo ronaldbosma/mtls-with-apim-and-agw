@@ -105,7 +105,26 @@ Both return `401 Unauthorized` with `ClientCertificateNotFound`, even though a v
 
 ### Demonstrate the security concern
 
-Call `validate-from-agw` directly against API Management (bypassing the Application Gateway) with the public part of a valid client certificate in the `X-Client-Certificate` header:
+The `validate-from-agw` operation trusts the `X-Client-Certificate` header. A malicious client could try to forge authentication by injecting the public part of a valid certificate into this header without going through the mTLS handshake. Two attack surfaces exist: through the Application Gateway's HTTPS listener, and directly against API Management.
+
+**Through the Application Gateway's HTTPS listener (port 443)**
+
+Call `validate-from-agw` via the Application Gateway's standard HTTPS endpoint with a valid certificate value injected in the `X-Client-Certificate` header:
+
+```http
+GET https://<your-application-gateway-ip-address>/protected/validate-from-agw
+Host: agw.mtls-sample.dev
+X-Client-Certificate: <url-encoded-certificate>
+```
+
+This returns `401 Unauthorized` with `ClientCertificateNotFound` — the rewrite rule on the HTTPS listener strips the header before the request reaches API Management, so the spoofing attempt is blocked.
+
+> [!NOTE]
+> The test file [tests/scenario2.http](../tests/scenario2.http) includes a pre-built request with a valid certificate value for this demonstration.The integration test `ValidateFromAgw_AgwSslEndpoint_PassValidClientCertificateInHeader_401UnauthorizedReturned` in `Scenario2Tests.cs` verifies this behaviour automatically.
+
+**Directly against API Management (bypassing the Application Gateway)**
+
+Call `validate-from-agw` directly against API Management with the same injected header:
 
 ```http
 GET https://<your-api-management-instance-name>.azure-api.net/protected/validate-from-agw

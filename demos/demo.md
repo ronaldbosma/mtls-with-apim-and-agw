@@ -39,4 +39,59 @@ The following resources will be deployed:
 
 ## 2. What can I demo from this scenario after deployment
 
-> TODO
+### Test the scenarios
+
+You can test the scenarios in two ways:
+
+- **Manual testing**: Use Visual Studio Code with the REST Client extension and the provided `.http` files to send requests and inspect responses interactively.
+- **Automated integration tests**: Run the .NET-based integration tests to validate all scenarios automatically.
+
+#### Manual testing using Visual Studio Code
+
+The repository includes an `.http` file per scenario under the [tests](../tests) folder: `scenario1.http`, `scenario2.http`, and `scenario3.http`. These files contain ready-made requests for each scenario.
+
+To send requests with a client certificate using the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension, configure the client certificate in your Visual Studio Code user settings:
+
+1. Open the Command Palette (`Ctrl+Shift+P`) and choose `Preferences: Open User Settings (JSON)`.
+
+1. Add the following configuration. Replace the hostname, ip address and path placeholders with your own values.
+
+   ```json
+   "rest-client.certificates": {
+       "<your-api-management-instance-name>.azure-api.net": {
+           "pfx": "<path-to-repo>/self-signed-certificates/certificates/valid-client.pfx",
+           "passphrase": "P@ssw0rd"
+       },
+        "<your-application-gateway-ip-address>:53029": {
+            "pfx": "<path-to-repo>/self-signed-certificates/certificates/dev-expired-client.pfx",
+            "passphrase": "P@ssw0rd"
+        }
+   }
+   ```
+
+1. Open the relevant `.http` file in Visual Studio Code, set the `@apimHostname` and/or `@agwIPAddress` variables at the top of the file to your API Management instance name and Application Gateway IP address respectively, and click `Send Request` above a request to execute it.
+
+To test with a different certificate (e.g. an expired or unregistered client), update the `pfx` path in the settings to point to the desired certificate from the [self-signed-certificates/certificates](../self-signed-certificates/certificates) folder.
+
+#### Automated integration tests
+
+The repository includes a .NET integration test project at [tests/IntegrationTests](../tests/IntegrationTests). A dedicated test class has been created per scenario (`Scenario1Tests.cs`, `Scenario2Tests.cs`, `Scenario3Tests.cs`), each covering multiple certificate cases.
+
+The tests use your local `azd` environment variables from `.azure/<environment-name>/.env` to connect to the deployed resources. Make sure your `azd` environment is set to the correct deployment before running the tests.
+
+**Run from your IDE (recommended for demos)**
+
+Each test logs the full HTTP request (method, URL, and body) and the full HTTP response (status code, reason, headers, and body) to the test output. This makes it easy to walk through exactly what was sent and what API Management or the Application Gateway returned for each certificate case. To see these logs, run the tests from your IDE and open the test output for an individual test:
+
+- **Visual Studio**: run the tests via the Test Explorer and click a test result to view its output.
+- **VS Code**: install the [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) extension, run the tests via the Testing panel and click a test result to view its output.
+
+**Run from the command line**
+
+The test output logs are not shown by default when running from the command line. To only verify that all tests pass, navigate to the `tests/IntegrationTests` folder and run:
+
+```powershell
+dotnet run
+```
+
+

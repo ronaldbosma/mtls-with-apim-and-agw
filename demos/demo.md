@@ -1,13 +1,6 @@
 # mTLS with API Management - Demo
 
-In this demo scenario, you will demonstrate how mutual TLS (mTLS) can be used with Azure API Management. The template deploys an API Management service with two APIs: a Protected API that validates client certificates, and an Unprotected API that acts as an mTLS client itself when calling the Protected API as a backend. An optional Application Gateway sits in front of API Management to handle client certificate validation at the network edge. The following three scenarios are covered:
-
-- **Scenario 1 — Validate client certificates in API Management**:  
-A client calls the Protected API directly over mTLS. API Management validates the presented client certificate. This scenario covers multiple validation approaches implemented via APIM policies.
-- **Scenario 2 — Validate client certificates when API Management is behind an Application Gateway**:  
-A client connects to the Application Gateway using mTLS. The Application Gateway can be configured in `Strict` mode (enforcing a valid client certificate) or `Passthrough` mode (forwarding the connection regardless). API Management then processes the client certificate passed on in a request header by the Application Gateway.
-- **Scenario 3 — Securing backend connections with mTLS**:  
-A client calls the Unprotected API over regular TLS. The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS. This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
+This demo shows how mutual TLS (mTLS) can be used with Azure API Management. The template deploys an API Management service with two APIs: a Protected API that validates client certificates, and an Unprotected API that acts as an mTLS client itself when calling the Protected API as a backend. An optional Application Gateway sits in front of API Management to handle client certificate validation at the network edge.
 
 See the following diagram for an overview:
 
@@ -39,12 +32,17 @@ The following resources will be deployed:
 
 ## 2. What can I demo from this scenario after deployment
 
-### Test the scenarios
+### Scenarios
 
-You can test the scenarios in two ways:
+The following scenarios are available. Each scenario has its own demo guide with step-by-step instructions. The shared testing prerequisites below apply to all scenarios.
 
-- **Manual testing**: Use Visual Studio Code with the REST Client extension and the provided `.http` files to send requests and inspect responses interactively.
-- **Automated integration tests**: Run the .NET-based integration tests to validate all scenarios automatically.
+- [Scenario 1 — Validate client certificates in API Management](./demo-scenario1.md)
+- [Scenario 2 — Validate client certificates when API Management is behind an Application Gateway](./demo-scenario2.md)
+- [Scenario 3 — Securing backend connections with mTLS](./demo-scenario3.md)
+
+### Shared testing prerequisites
+
+Each scenario can be tested manually using the REST Client extension in Visual Studio Code, or automatically using the .NET integration tests. The setup below applies to all scenarios.
 
 #### Manual testing using Visual Studio Code
 

@@ -6,8 +6,15 @@ using IntegrationTests.Configuration;
 
 namespace IntegrationTests;
 
+/// <summary>
+/// Integration tests for Scenario 2 — Validate client certificates at the Application Gateway:
+///
+/// A client connects to the Application Gateway using mTLS.
+/// The Application Gateway can be configured in `Strict` mode (enforcing a valid client certificate) or `Passthrough` mode (forwarding the connection regardless).
+/// API Management then processes the client certificate passed on in a request header by the Application Gateway.
+/// </summary>
 [TestClass]
-public class ApplicationGatewayTests
+public class Scenario2Tests
 {
     private static readonly TestConfiguration Config = TestConfiguration.Load();
     private static X509Certificate2? s_validClientCertificate;

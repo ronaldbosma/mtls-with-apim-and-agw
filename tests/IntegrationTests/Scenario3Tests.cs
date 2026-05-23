@@ -6,10 +6,14 @@ using IntegrationTests.Configuration;
 namespace IntegrationTests;
 
 /// <summary>
-/// Integration tests for the Unprotected API, which will forward requests to the Protected API using a backend that has a valid client certificate configured.
+/// Integration tests for Scenario 3 — No client certificate validation at the Application Gateway or API Management:
+///
+/// A client calls the Unprotected API over regular TLS.
+/// The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS.
+/// This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
 /// </summary>
 [TestClass]
-public sealed class UnprotectedApiTests
+public sealed class Scenario3Tests
 {
     private static readonly TestConfiguration Config = TestConfiguration.Load();
 

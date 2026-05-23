@@ -7,10 +7,13 @@ using IntegrationTests.Configuration;
 namespace IntegrationTests;
 
 /// <summary>
-/// Integration tests for the Protected API, which is configured to require client certificate authentication in APIM.
+/// Integration tests for Scenario 1 — Validate client certificates in API Management:
+///
+/// A client calls the Protected API directly over mTLS. API Management validates the presented client certificate.
+/// This scenario covers multiple validation approaches implemented via APIM policies.
 /// </summary>
 [TestClass]
-public sealed class ProtectedApiTests
+public sealed class Scenario1Tests
 {
     private static readonly TestConfiguration Config = TestConfiguration.Load();
     private static X509Certificate2? s_validClientCertificate;

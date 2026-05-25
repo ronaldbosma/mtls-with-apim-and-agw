@@ -17,6 +17,9 @@ param apiManagementServiceName string
 @description('The name of the Key Vault that contains the secrets and certificates')
 param keyVaultName string
 
+@description('Whether to include the Application Gateway in the deployment')
+param includeApplicationGateway bool
+
 @description('Indicates whether the Protected API should validate the certificate chain of the client certificate.')
 param validateCertificateChainInProtectedApi bool
 
@@ -37,6 +40,7 @@ module protectedApi 'protected-api/protected-api.bicep' = {
   params: {
     apiManagementServiceName: apiManagementServiceName
     validateCertificateChain: validateCertificateChainInProtectedApi
+    includeApplicationGateway: includeApplicationGateway
   }
 }
 

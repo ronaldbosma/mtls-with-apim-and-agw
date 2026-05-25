@@ -9,6 +9,9 @@
 @description('The name of the API Management service')
 param apiManagementServiceName string
 
+@description('Whether to include the Application Gateway in the deployment')
+param includeApplicationGateway bool
+
 @description('Indicates whether the API should validate the certificate chain of the client certificate.')
 param validateCertificateChain bool
 
@@ -109,7 +112,7 @@ resource validateUsingContextOperation 'Microsoft.ApiManagement/service/apis/ope
 }
 
 // Operation to validate client certificate received from Application Gateway
-resource validateFromAgwOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = {
+resource validateFromAgwOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = if (includeApplicationGateway) {
   name: 'validate-from-agw'
   parent: protectedApi
   properties: {

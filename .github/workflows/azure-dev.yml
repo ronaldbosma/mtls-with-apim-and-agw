@@ -121,6 +121,7 @@ jobs:
             --parameters resourceGroupName='sample' `
                          apiManagementServiceName='sample' `
                          keyVaultName='sample' `
+                         includeApplicationGateway=$env:INCLUDE_APPLICATION_GATEWAY `
                          validateCertificateChainInProtectedApi=$env:VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API
 
       - name: Create artifacts folder

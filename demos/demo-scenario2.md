@@ -15,7 +15,7 @@ Before testing this scenario, make sure you have checked the [shared testing ins
 
 The flow for this scenario is shown in the image below:
 
-![Scenario 2 Flow](/images/diagrams-scenario2-flow.png)
+![Scenario 2 Flow](/images/diagrams-scenario2-flow.drawio.png)
 
 The client establishes an mTLS connection with the Application Gateway. The Application Gateway terminates the TLS session, validates the client certificate, and forwards the request to API Management over a regular TLS connection. The client certificate is **not** forwarded automatically — the Application Gateway places the public part of the certificate into the `X-Client-Certificate` request header using a rewrite rule.
 
@@ -25,7 +25,7 @@ This means that the `validate-client-certificate` policy and `context.Request.Ce
 
 The Application Gateway configuration is shown in the image below:
 
-![Scenario 2 AGW Setup](/images/diagrams-scenario2-agw-setup.png)
+![Scenario 2 AGW Setup](/images/diagrams-scenario2-agw-setup.drawio.svg)
 
 Open [infra/02-platform/modules/application-gateway.bicep](../infra/02-platform/modules/application-gateway.bicep) and review the key components.
 

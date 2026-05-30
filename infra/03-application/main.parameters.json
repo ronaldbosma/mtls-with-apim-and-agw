@@ -11,6 +11,9 @@
     "keyVaultName": {
       "value": "${AZURE_KEY_VAULT_NAME}"
     },
+    "includeApplicationGateway": {
+      "value": "${INCLUDE_APPLICATION_GATEWAY}"
+    },
     "validateCertificateChainInProtectedApi": {
       "value": "${VALIDATE_CERTIFICATE_CHAIN_IN_PROTECTED_API}"
     }

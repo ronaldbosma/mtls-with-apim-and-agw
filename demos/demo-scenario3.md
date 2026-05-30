@@ -15,7 +15,7 @@ Before testing this scenario, make sure you have checked the [shared testing ins
 
 The setup for this scenario is shown in the image below:
 
-![Scenario 3 Setup](/images/diagrams-scenario3-setup.png)
+![Scenario 3 Setup](/images/diagrams-scenario3-setup.drawio.png)
 
 The caller connects to API Management using regular TLS — no client certificate is required from the caller's side. When the Unprotected API forwards the request to the Protected API backend, it attaches the `Unprotected API` client certificate. API Management loads this certificate from Key Vault at runtime using a managed identity with the `Key Vault Secrets User` role.
 

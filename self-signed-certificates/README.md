@@ -10,7 +10,7 @@
 
 The script [generate-client-certificates.ps1](./generate-client-certificates.ps1) can be used to generate the following self-signed certificate tree.
 
-![self-signed certificates](../images/diagrams-self-signed-certificates.png)
+![self-signed certificates](../images/diagrams-self-signed-certificates.drawio.svg)
 
 - **APIM Sample Root CA**: is the root CA for this sample
   - **APIM Sample DEV Intermediate CA**: is intermediate CA for a 'dev' environment

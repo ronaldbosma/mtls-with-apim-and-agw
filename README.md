@@ -6,7 +6,7 @@ An `azd` template using Bicep that demonstrates mutual TLS (mTLS) with Azure API
 
 This template deploys the following resources:
 
-![Overview](images/diagrams-overview.png)
+![Overview](images/diagrams-overview.drawio.svg)
 
 The infrastructure uses [azd layered provisioning](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/layered-provisioning) _(currently in beta)_ and is organized into three layers:
 

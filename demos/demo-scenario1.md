@@ -2,15 +2,15 @@
 
 In this scenario, a client calls the Protected API directly over mTLS. API Management validates the presented client certificate. Two different validation approaches are demonstrated, each implemented as a separate operation in the Protected API.
 
-The flow for this scenario is shown in the image below:
-
-![Scenario 1 Flow](/images/diagrams-scenario1-flow.drawio.png)
-
 For a detailed explanation of the concepts, see [Validate client certificates in API Management](https://ronaldbosma.github.io/blog/2024/02/02/validate-client-certificates-in-api-management/).
 
 Before testing this scenario, make sure you have checked the [shared testing instructions](./demo.md#shared-testing-instructions).
 
 ## 1. Review the implementation
+
+The flow for this scenario is shown in the image below:
+
+![Scenario 1 Flow](/images/diagrams-scenario1-flow.drawio.png)
 
 The Protected API exposes two operations that each validate the client certificate differently. Open the policy files to review the implementation before testing.
 

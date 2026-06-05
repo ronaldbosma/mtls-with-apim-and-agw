@@ -143,3 +143,6 @@ This returns `200 OK`, demonstrating that if API Management is directly accessib
 
 > [!NOTE]
 > The test file [tests/scenario2.http](../tests/scenario2.http) includes a pre-built request with a valid certificate value for this demonstration. The integration test `ValidateFromAgw_DirectyApimCall_PassValidClientCertificateInHeader_200OkReturned` in `Scenario2Tests.cs` covers the same case automatically.
+
+
+_Next: [Scenario 3 — Securing backend connections with mTLS](./demo-scenario3.md)_

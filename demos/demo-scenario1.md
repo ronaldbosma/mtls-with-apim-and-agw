@@ -71,3 +71,5 @@ Test the following cases for each operation. Switch the active client certificat
 > [!NOTE]
 > Tests for the Valid Client and Unregistered Client will fail on v2 tiers when certificate chain validation is enabled, because the CA certificates cannot be uploaded on those tiers and the chain validation will always fail.
 
+
+_Next: [Scenario 2 — Validate client certificates when API Management is behind an Application Gateway](./demo-scenario2.md)_

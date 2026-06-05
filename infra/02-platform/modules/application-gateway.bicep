@@ -179,6 +179,8 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2025-05-01' =
             // This only works when the mTLS mode (verifyClientAuthMode) is set to Strict.
             verifyClientCertIssuerDN: applicationGatewaySettings.mtlsMode == 'Strict'
           }
+          // For Strict mode, we need to configure trusted CA certificates in order to verify the self-signed client certificates.
+          // For Passthrough mode, this can be omitted because all client certificates are forwarded to API Management.
           trustedClientCertificates: applicationGatewaySettings.mtlsMode == 'Strict'
             ? [
                 {

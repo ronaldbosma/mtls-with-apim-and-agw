@@ -77,23 +77,31 @@ The results differ depending on the configured mTLS mode:
 
 | Certificate | Expected result | Reason |
 |---|---|---|
-| **Valid Client** | `200 OK` — certificate details in body | Certificate passes AGW validation and is registered in API Management |
 | _(no certificate)_ | `400 Bad Request` | Application Gateway rejects the connection — no client certificate provided |
+| **Valid Client** | `200 OK` — certificate details in body | Certificate passes AGW validation and is registered in API Management |
 | **Unregistered Client** | `401 Unauthorized` | AGW accepts (trusted issuer), APIM rejects — `ClientCertificateIdentityNotMatched` |
 | **Untrusted Client** | `400 Bad Request` | Application Gateway rejects the connection — certificate not issued by a trusted CA |
 | **Expired Client** | `400 Bad Request` | Application Gateway rejects the connection — certificate is expired |
 | **Not Yet Valid Client** | `400 Bad Request` | Application Gateway rejects the connection — certificate is not yet valid |
 
+See the following sequence diagram for the flow of each certificate:
+
+![Sequence Diagram mTLS Strict mode](/images/sequence-diagram-agw-strict.drawio.png)
+
 **Passthrough mode** (`applicationGatewayMtlsMode = Passthrough`):
 
 | Certificate | Expected result | Reason |
 |---|---|---|
-| **Valid Client** | `200 OK` — certificate details in body | Certificate is registered and valid |
 | _(no certificate)_ | `401 Unauthorized` | `ClientCertificateNotFound` — no header forwarded |
+| **Valid Client** | `200 OK` — certificate details in body | Certificate is registered and valid |
 | **Unregistered Client** | `401 Unauthorized` | `ClientCertificateIdentityNotMatched` |
 | **Untrusted Client** | `401 Unauthorized` | `ClientCertificateNotTrusted` (chain validation on) or `ClientCertificateIdentityNotMatched` (chain validation off) |
 | **Expired Client** | `401 Unauthorized` | `ClientCertificateExpired` |
 | **Not Yet Valid Client** | `401 Unauthorized` | `ClientCertificateNotYetValid` |
+
+See the following sequence diagram for the flow of each certificate:
+
+![Sequence Diagram mTLS Strict mode](/images/sequence-diagram-agw-passthrough.drawio.png)
 
 ### Demonstrate that `validate-using-policy` and `validate-using-context` don't work here
 

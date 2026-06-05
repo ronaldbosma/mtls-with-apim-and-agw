@@ -17,7 +17,7 @@ The flow for this scenario is shown in the image below:
 
 ![Scenario 2 Flow](/images/diagrams-scenario2-flow.drawio.png)
 
-The client establishes an mTLS connection with the Application Gateway. The Application Gateway terminates the TLS session, validates the client certificate, and forwards the request to API Management over a regular TLS connection. The client certificate is **not** forwarded automatically — the Application Gateway places the public part of the certificate into the `X-Client-Certificate` request header using a rewrite rule.
+The client establishes an mTLS connection with the Application Gateway. The Application Gateway terminates the mTLS session, validates the client certificate, and forwards the request to API Management over a regular TLS connection. The client certificate is **not** forwarded automatically — the Application Gateway places the public part of the certificate into the `X-Client-Certificate` request header using a rewrite rule.
 
 This means that the `validate-client-certificate` policy and `context.Request.Certificate` used in Scenario 1 are not available here, because API Management never receives the certificate as part of a TLS handshake.
 

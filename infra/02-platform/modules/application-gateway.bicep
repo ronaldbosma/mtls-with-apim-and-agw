@@ -179,15 +179,17 @@ resource applicationGateway 'Microsoft.Network/applicationGateways@2025-05-01' =
             // This only works when the mTLS mode (verifyClientAuthMode) is set to Strict.
             verifyClientCertIssuerDN: applicationGatewaySettings.mtlsMode == 'Strict'
           }
-          trustedClientCertificates: [
-            {
-              id: resourceId(
-                'Microsoft.Network/applicationGateways/trustedClientCertificates',
-                applicationGatewayName,
-                'intermediate-ca-with-root-ca'
-              )
-            }
-          ]
+          trustedClientCertificates: applicationGatewaySettings.mtlsMode == 'Strict'
+            ? [
+                {
+                  id: resourceId(
+                    'Microsoft.Network/applicationGateways/trustedClientCertificates',
+                    applicationGatewayName,
+                    'intermediate-ca-with-root-ca'
+                  )
+                }
+              ]
+            : []
         }
       }
     ]

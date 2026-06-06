@@ -208,6 +208,35 @@ public class Scenario2Tests
 
     /// <summary>
     /// The validate-from-agw operation relies on the X-Client-Certificate to verify if a valid client certificate was provided to the Application Gateway on the mTLS endpoint.
+    /// When calling the operation via the App Gateway's mTLS listener endpoint, a client could pass the public part of a valid client certificate in the header to try and 'spoof' a successful mTLS authentication.
+    /// This test verifies this kind of attack is blocked.
+    /// </summary>
+    [TestMethod]
+    public async Task ValidateFromAgw_AgwMtslEndpoint_PassValidClientCertificateInHeader_401UnauthorizedReturned()
+    {
+        // Arrange
+        using var agwClient = new IntegrationTestHttpClient(Config.ApplicationGatewayIpAddress!, MTLS_PORT, APPLICATION_GATEWAY_HOST_NAME);
+        agwClient.DefaultRequestHeaders.Add("X-Client-Certificate", VALID_CLIENT_CERTIFICATE_BASE64);
+
+        // Act
+        var response = await agwClient.GetAsync("protected/validate-from-agw");
+
+        // Assert
+        if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
+        {
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            await ResponseAssert.ContentContains(response, "The SSL certificate error");
+        }
+        else
+        {
+            Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            ResponseAssert.HasErrorReason(response, "ClientCertificateNotFound");
+            await ResponseAssert.ContentContains(response, "Client certificate missing");
+        }
+    }
+
+    /// <summary>
+    /// The validate-from-agw operation relies on the X-Client-Certificate to verify if a valid client certificate was provided to the Application Gateway on the mTLS endpoint.
     /// When calling the operation via the App Gateway's HTTPS listener endpoint, a client could pass the public part of a valid client certificate in the header and 'spoof' a successful mTLS authentication.
     /// This test verifies this kind of attack is blocked (the HTTPS listener on the Application Gateway should remove the X-Client-Certificate header).
     /// </summary>

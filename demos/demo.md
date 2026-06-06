@@ -105,3 +105,6 @@ ErrorReason: ClientCertificateExpired
 ```
 
 The rejection reason is also traced to Application Insights via the `trace` policy, so you can look it up in the Application Insights logs if the response headers are not visible (e.g. when testing via a browser or a tool that does not show raw headers).
+
+
+_Next: [Scenario 1 — Validate client certificates in API Management](./demo-scenario1.md)_

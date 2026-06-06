@@ -225,7 +225,7 @@ public class Scenario2Tests
         if (Config.IsApplicationGatewayMtlsModeStrict!.Value)
         {
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            await ResponseAssert.ContentContains(response, "The SSL certificate error");
+            await ResponseAssert.ContentContains(response, "No required SSL certificate was sent");
         }
         else
         {

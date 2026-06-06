@@ -2,7 +2,7 @@
     <inbound>
         <base />
 
-        <!-- Determine if the client certificate is valid and store the reason in a variable -->
+        <!-- Determine if the client certificate is (in)valid and store the reason in a variable -->
         <set-variable name="certificateValidationResult" value="@{
             if (context.Request.Certificate == null)
             {

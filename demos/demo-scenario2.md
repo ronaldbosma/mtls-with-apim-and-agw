@@ -31,6 +31,8 @@ Open [infra/02-platform/modules/application-gateway.bicep](../infra/02-platform/
 
 The Application Gateway exposes two listeners on the same frontend IP:
 
+![Listeners on Application Gateway](/images/diagrams-listeners-on-agw.drawio.png)
+
 - **`https-listener`** on port `443` — accepts standard HTTPS traffic. A rewrite rule (`default-rewrite-rules`) strips the `X-Client-Certificate` header from all inbound requests. This prevents clients from spoofing a valid certificate by injecting this header manually.
 - **`mtls-listener`** on port `53029` — accepts mTLS traffic. This listener is linked to an SSL profile (`mtls-ssl-profile`) that references the trusted intermediate and root CA certificates. A rewrite rule (`mtls-rewrite-rules`) reads the `{var_client_certificate}` server variable and writes its value into the `X-Client-Certificate` header.
 

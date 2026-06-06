@@ -42,6 +42,9 @@ After the core layer is provisioned, the [self-signed client certificates](./sel
     Validates the client certificate that was forwarded by the Application Gateway.
 - **Unprotected API**: Does not validate client certificates from the caller, but acts as an mTLS client itself when forwarding requests to the Protected API as its mTLS-protected backend. It retrieves a client certificate from Key Vault and uses it to authenticate against the Protected API.
 
+> [!IMPORTANT]  
+> This template is not production-ready; it uses minimal cost SKUs and omits network isolation, advanced security, governance and resiliency. Harden security, implement enterprise controls and/or replace modules with [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/) before any production use.
+
 ### Scenarios
 
 This template demonstrates the following three scenarios:
@@ -60,9 +63,6 @@ _Detailed explanation: [Validate client certificates in API Management when it's
 A client calls the Unprotected API over regular TLS. The Unprotected API retrieves a client certificate from Key Vault and uses it to call the Protected API as a backend over mTLS. This demonstrates how API Management can act as an mTLS client when communicating with mTLS-protected backends.
 
 _Detailed explanation: [Securing backend connections with mTLS in API Management](https://ronaldbosma.github.io/blog/2024/05/24/securing-backend-connections-with-mtls-in-api-management/)_
-
-> [!IMPORTANT]  
-> This template is not production-ready; it uses minimal cost SKUs and omits network isolation, advanced security, governance and resiliency. Harden security, implement enterprise controls and/or replace modules with [Azure Verified Modules](https://azure.github.io/Azure-Verified-Modules/) before any production use.
 
 ## Getting Started
 

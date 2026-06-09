@@ -10,7 +10,7 @@ See the following diagram for an overview:
 
 The demo uses a set of self-signed certificates to simulate different client scenarios. These certificates are already included in the repository and are imported into Key Vault during deployment. The following certificate tree is used:
 
-![Self-signed certificates](/images/diagrams-self-signed-certificates.drawio.svg)
+![Self-signed certificates](/images/diagrams-self-signed-certificates.drawio.png)
 
 - **APIM Sample Root CA**: the root CA for this sample. Trusted by Application Gateway and, if the API Management tier supports it, also by API Management.
   - **APIM Sample DEV Intermediate CA**: intermediate CA for the 'dev' environment. Trusted by Application Gateway and, if the API Management tier supports it, also by API Management.

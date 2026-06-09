@@ -2,7 +2,7 @@
 
 name: mtls-with-apim-and-agw
 metadata:
-  template: mtls-with-apim-and-agw@0.0.0
+  template: mtls-with-apim-and-agw@1.0.0
 infra:
   layers:
     - name: core

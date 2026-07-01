@@ -52,7 +52,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2025-07
   name: logAnalyticsWorkspaceName
 }
 
-resource agwPublicIPAddress 'Microsoft.Network/publicIPAddresses@2025-05-01' existing = {
+resource agwPublicIPAddress 'Microsoft.Network/publicIPAddresses@2025-07-01' existing = {
   name: applicationGatewaySettings.publicIpAddressName
 }
 
@@ -88,7 +88,7 @@ module assignRolesToAgwUserAssignedIdentity '../../99-shared/assign-roles-to-pri
 
 // Application Gateway
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2025-05-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2025-07-01' = {
   name: applicationGatewayName
   location: location
   tags: tags

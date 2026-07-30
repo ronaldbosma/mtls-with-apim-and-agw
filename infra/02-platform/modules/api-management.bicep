@@ -68,11 +68,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightsName
 }
 
-#disable-next-line no-unused-existing-resources
-resource keyVault 'Microsoft.KeyVault/vaults@2025-05-01' existing = {
-  name: keyVaultName
-}
-
 //=============================================================================
 // Resources
 //=============================================================================

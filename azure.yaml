@@ -18,4 +18,4 @@ infra:
     - name: application
       path: ./infra/03-application
 requiredVersions:
-  azd: ">= 1.23.15" # azd version 1.23.15 or higher is required because we're using features from Bicep 0.42.1.
+  azd: ">= 1.28.1" # azd version 1.28.1 or higher is required because we're using features from Bicep v0.45.6.

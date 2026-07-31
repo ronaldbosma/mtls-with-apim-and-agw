@@ -11,6 +11,7 @@ targetScope = 'subscription'
 import { getResourceName, generateInstanceId } from '../99-shared/naming-conventions.bicep'
 import { getTemplateTags } from '../99-shared/helpers.bicep'
 import { apimSkuType, appInsightsSettingsType, applicationGatewayMtlsModeType } from '../99-shared/settings.bicep'
+import { tagsType } from '../99-shared/types.bicep'
 
 //=============================================================================
 // Parameters
@@ -80,7 +81,7 @@ var appInsightsSettings appInsightsSettingsType = {
 
 var keyVaultName string = getResourceName('keyVault', environmentName, location, instanceId)
 
-var tags { *: string } = getTemplateTags(environmentName)
+var tags tagsType = getTemplateTags(environmentName)
 
 //=============================================================================
 // Resources

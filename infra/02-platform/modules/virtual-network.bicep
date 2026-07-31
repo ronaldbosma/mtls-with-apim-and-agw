@@ -7,6 +7,7 @@
 //=============================================================================
 
 import { virtualNetworkSettingsType } from '../../99-shared/settings.bicep'
+import { tagsType } from '../../99-shared/types.bicep'
 
 //=============================================================================
 // Parameters
@@ -16,7 +17,7 @@ import { virtualNetworkSettingsType } from '../../99-shared/settings.bicep'
 param location string
 
 @description('The tags to associate with the resource')
-param tags object
+param tags tagsType
 
 @description('The settings for the virtual network')
 param virtualNetworkSettings virtualNetworkSettingsType

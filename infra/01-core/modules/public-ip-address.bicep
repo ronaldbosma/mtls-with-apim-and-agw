@@ -3,6 +3,12 @@
 //=============================================================================
 
 //=============================================================================
+// Imports
+//=============================================================================
+
+import { tagsType } from '../../99-shared/types.bicep'
+
+//=============================================================================
 // Parameters
 //=============================================================================
 
@@ -10,7 +16,7 @@
 param location string
 
 @description('The tags to associate with the resource')
-param tags object
+param tags tagsType
 
 @description('The name of the Public IP Address')
 param publicIpAddressName string

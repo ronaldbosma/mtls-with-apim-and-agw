@@ -17,6 +17,7 @@ import {
   applicationGatewayMtlsModeType
   virtualNetworkSettingsType
 } from '../99-shared/settings.bicep'
+import { tagsType } from '../99-shared/types.bicep'
 
 //=============================================================================
 // Parameters
@@ -83,7 +84,7 @@ var virtualNetworkSettings virtualNetworkSettingsType = {
   applicationGatewaySubnetName: getResourceName('subnet', environmentName, location, 'agw-${instanceId}')
 }
 
-var tags { *: string } = getTemplateTags(environmentName)
+var tags tagsType = getTemplateTags(environmentName)
 
 //=============================================================================
 // Existing Resources

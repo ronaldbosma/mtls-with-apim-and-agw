@@ -7,6 +7,7 @@
 //=============================================================================
 
 import { applicationGatewaySettingsType } from '../../99-shared/settings.bicep'
+import { tagsType } from '../../99-shared/types.bicep'
 import { getApiManagementFqdn } from '../../99-shared/helpers.bicep'
 
 //=============================================================================
@@ -17,7 +18,7 @@ import { getApiManagementFqdn } from '../../99-shared/helpers.bicep'
 param location string = resourceGroup().location
 
 @description('The tags to associate with the resource')
-param tags object
+param tags tagsType
 
 @description('The settings for the Application Gateway')
 param applicationGatewaySettings applicationGatewaySettingsType

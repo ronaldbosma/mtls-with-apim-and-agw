@@ -25,7 +25,7 @@ param publicIpAddressName string
 // Resources
 //=============================================================================
 
-resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2025-07-01' = {
+resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2025-09-01' = {
   name: publicIpAddressName
   location: location
   tags: tags

@@ -27,7 +27,7 @@ param virtualNetworkSettings virtualNetworkSettingsType
 //=============================================================================
 
 // Virtual Network
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-07-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-09-01' = {
   name: virtualNetworkSettings.virtualNetworkName
   location: location
   tags: tags

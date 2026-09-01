@@ -57,11 +57,11 @@ resource agwPublicIPAddress 'Microsoft.Network/publicIPAddresses@2025-09-01' exi
   name: applicationGatewaySettings.publicIpAddressName
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2025-05-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' existing = {
   name: keyVaultName
 }
 
-resource sslServerCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2025-05-01' existing = {
+resource sslServerCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2026-02-01' existing = {
   name: 'agw-ssl-server-certificate'
   parent: keyVault
 }

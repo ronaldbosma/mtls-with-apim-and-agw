@@ -23,11 +23,11 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2025-03-01-previe
   name: apiManagementServiceName
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2025-05-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' existing = {
   name: keyVaultName
 }
 
-resource clientCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2025-05-01' existing = {
+resource clientCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2026-02-01' existing = {
   name: 'dev-unprotected-api'
   parent: keyVault
 }

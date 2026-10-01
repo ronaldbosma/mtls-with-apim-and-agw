@@ -19,7 +19,7 @@ param validateCertificateChain bool
 // Existing resources
 //=============================================================================
 
-resource apiManagementService 'Microsoft.ApiManagement/service@2025-03-01-preview' existing = {
+resource apiManagementService 'Microsoft.ApiManagement/service@2025-09-01-preview' existing = {
   name: apiManagementServiceName
 }
 
@@ -29,7 +29,7 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2025-03-01-previe
 
 // Named Values
 
-resource validateCertificateChainNamedValue 'Microsoft.ApiManagement/service/namedValues@2025-03-01-preview' = {
+resource validateCertificateChainNamedValue 'Microsoft.ApiManagement/service/namedValues@2025-09-01-preview' = {
   name: 'validate-certificate-chain'
   parent: apiManagementService
   properties: {
@@ -42,7 +42,7 @@ resource validateCertificateChainNamedValue 'Microsoft.ApiManagement/service/nam
 // NOTE: The 'Unprotected API' client certificate is also trusted, but it's already added to API Management in ../unprotected-api/unprotected-api.bicep referencing Key Vault.
 //       Adding it here as well (without the private key) would cause a 'duplicate certificate' deployment error.
 
-resource validClientClientCertificate 'Microsoft.ApiManagement/service/certificates@2025-03-01-preview' = {
+resource validClientClientCertificate 'Microsoft.ApiManagement/service/certificates@2025-09-01-preview' = {
   name: 'valid-client-client-certificate'
   parent: apiManagementService
   properties: {
@@ -52,7 +52,7 @@ resource validClientClientCertificate 'Microsoft.ApiManagement/service/certifica
 
 // API
 
-resource protectedApi 'Microsoft.ApiManagement/service/apis@2025-03-01-preview' = {
+resource protectedApi 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' = {
   name: 'protected-api'
   parent: apiManagementService
   properties: {
@@ -66,7 +66,7 @@ resource protectedApi 'Microsoft.ApiManagement/service/apis@2025-03-01-preview' 
 }
 
 // Operation to validate client certificate using validate-client-certificate policy
-resource validateUsingPolicyOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = {
+resource validateUsingPolicyOperation 'Microsoft.ApiManagement/service/apis/operations@2025-09-01-preview' = {
   name: 'validate-using-policy'
   parent: protectedApi
   properties: {
@@ -89,7 +89,7 @@ resource validateUsingPolicyOperation 'Microsoft.ApiManagement/service/apis/oper
 }
 
 // Operation to validate client certificate using context.Request.Certificate property
-resource validateUsingContextOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = {
+resource validateUsingContextOperation 'Microsoft.ApiManagement/service/apis/operations@2025-09-01-preview' = {
   name: 'validate-using-context'
   parent: protectedApi
   properties: {
@@ -112,7 +112,7 @@ resource validateUsingContextOperation 'Microsoft.ApiManagement/service/apis/ope
 }
 
 // Operation to validate client certificate received from Application Gateway
-resource validateFromAgwOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = if (includeApplicationGateway) {
+resource validateFromAgwOperation 'Microsoft.ApiManagement/service/apis/operations@2025-09-01-preview' = if (includeApplicationGateway) {
   name: 'validate-from-agw'
   parent: protectedApi
   properties: {

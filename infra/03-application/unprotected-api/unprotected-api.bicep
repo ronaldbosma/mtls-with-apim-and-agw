@@ -19,7 +19,7 @@ param keyVaultName string
 // Existing resources
 //=============================================================================
 
-resource apiManagementService 'Microsoft.ApiManagement/service@2025-03-01-preview' existing = {
+resource apiManagementService 'Microsoft.ApiManagement/service@2025-09-01-preview' existing = {
   name: apiManagementServiceName
 }
 
@@ -38,7 +38,7 @@ resource clientCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2026-05-15' 
 
 // Client Certificate
 
-resource clientCertificate 'Microsoft.ApiManagement/service/certificates@2025-03-01-preview' = {
+resource clientCertificate 'Microsoft.ApiManagement/service/certificates@2025-09-01-preview' = {
   name: 'unprotected-api-client-certificate'
   parent: apiManagementService
   properties: {
@@ -50,7 +50,7 @@ resource clientCertificate 'Microsoft.ApiManagement/service/certificates@2025-03
 
 // Backend
 
-resource protectedBackend 'Microsoft.ApiManagement/service/backends@2025-03-01-preview' = {
+resource protectedBackend 'Microsoft.ApiManagement/service/backends@2025-09-01-preview' = {
   parent: apiManagementService
   name: 'protected-backend'
   properties: {
@@ -83,7 +83,7 @@ resource protectedBackend 'Microsoft.ApiManagement/service/backends@2025-03-01-p
 
 // API
 
-resource unprotectedApi 'Microsoft.ApiManagement/service/apis@2025-03-01-preview' = {
+resource unprotectedApi 'Microsoft.ApiManagement/service/apis@2025-09-01-preview' = {
   name: 'unprotected-api'
   parent: apiManagementService
   properties: {
@@ -109,7 +109,7 @@ resource unprotectedApi 'Microsoft.ApiManagement/service/apis@2025-03-01-preview
 }
 
 // Operation that will forward all GET requests to the backend API
-resource getOperation 'Microsoft.ApiManagement/service/apis/operations@2025-03-01-preview' = {
+resource getOperation 'Microsoft.ApiManagement/service/apis/operations@2025-09-01-preview' = {
   name: 'get'
   parent: unprotectedApi
   properties: {

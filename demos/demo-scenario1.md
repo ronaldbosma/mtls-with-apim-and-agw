@@ -4,7 +4,7 @@ In this scenario, a client calls the Protected API directly over mTLS. API Manag
 
 For a detailed explanation of the concepts, see [Validate client certificates in API Management](https://ronaldbosma.github.io/blog/2024/02/02/validate-client-certificates-in-api-management/).
 
-Before testing this scenario, make sure you have checked the [shared testing instructions](./demo.md#shared-testing-instructions).
+Before testing this scenario, make sure you have checked the [shared testing instructions](./README.md#shared-testing-instructions).
 
 ## 1. Review the implementation
 
@@ -48,7 +48,7 @@ The root CA (`root-ca`) and the DEV intermediate CA (`dev-intermediate-ca`) are 
 
 ## 2. Test the scenario
 
-Use [tests/scenario1.http](../tests/scenario1.http) for manual testing, or run `Scenario1Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
+Use [tests/scenario1.http](../tests/scenario1.http) for manual testing, or run `Scenario1Tests.cs` from the integration test project. See the [shared testing instructions](./README.md#shared-testing-instructions) for setup instructions.
 
 The two operations to test are:
 - `GET /protected/validate-using-policy` — validates using the `validate-client-certificate` policy.

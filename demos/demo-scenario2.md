@@ -4,7 +4,7 @@ In this scenario, a client calls the Protected API via an Application Gateway us
 
 For a detailed explanation of the concepts, see [Validate client certificates in API Management when it's behind an Application Gateway](https://ronaldbosma.github.io/blog/2024/02/19/validate-client-certificates-in-api-management-when-its-behind-an-application-gateway/).
 
-Before testing this scenario, make sure you have checked the [shared testing instructions](./demo.md#shared-testing-instructions).
+Before testing this scenario, make sure you have checked the [shared testing instructions](./README.md#shared-testing-instructions).
 
 > [!NOTE]
 > This scenario requires the Application Gateway to be deployed. See the [README](../README.md) for details on how to include it in the deployment.
@@ -64,9 +64,9 @@ However, if API Management is directly accessible (e.g., not isolated in an inte
 
 ## 2. Test the scenario
 
-Use [tests/scenario2.http](../tests/scenario2.http) for manual testing, or run `Scenario2Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
+Use [tests/scenario2.http](../tests/scenario2.http) for manual testing, or run `Scenario2Tests.cs` from the integration test project. See the [shared testing instructions](./README.md#shared-testing-instructions) for setup instructions.
 
-For manual testing, configure your Visual Studio Code user settings to use `<your-application-gateway-ip-address>:53029` as the mTLS endpoint. See the [shared testing instructions](./demo.md#manual-testing-using-visual-studio-code) for details.
+For manual testing, configure your Visual Studio Code user settings to use `<your-application-gateway-ip-address>:53029` as the mTLS endpoint. See the [shared testing instructions](./README.md#manual-testing-using-visual-studio-code) for details.
 
 The main operation to test is:
 - `GET /protected/validate-from-agw` — validates the client certificate forwarded by the Application Gateway.

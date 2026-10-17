@@ -134,7 +134,7 @@ Once the prerequisites are installed on your machine, you can deploy this templa
 
 ### Demo
 
-See the [Demo Guide](demos/demo.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management and Application Gateway.
+See the [Demo Guide](demos/README.md) for a step-by-step walkthrough on how to check the deployment and demonstrate different mTLS scenarios with API Management and Application Gateway.
 
 ### Clean up
 
@@ -315,7 +315,7 @@ For detailed guidance, refer to:
 ## Integration Tests
 
 The project includes integration tests built with **.NET 10** that validate various scenarios through the deployed Azure services.
-The tests send the same test requests described in the [Demo](./demos/demo.md) and are located in [IntegrationTests](tests/IntegrationTests).
+The tests send the same test requests described in the [Demo](./demos/README.md) and are located in [IntegrationTests](tests/IntegrationTests).
 They automatically locate your azd environment's `.env` file if available, to retrieve necessary configuration. In the [pipeline](#pipeline) they rely on environment variables set in the workflow.
 
 ## Troubleshooting

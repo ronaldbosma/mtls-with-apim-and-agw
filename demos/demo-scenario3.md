@@ -4,7 +4,7 @@ In this scenario, a client calls the Unprotected API over regular TLS. The Unpro
 
 For a detailed explanation of the concepts, see [Securing backend connections with mTLS in API Management](https://ronaldbosma.github.io/blog/2024/05/24/securing-backend-connections-with-mtls-in-api-management/).
 
-Before testing this scenario, make sure you have checked the [shared testing instructions](./demo.md#shared-testing-instructions).
+Before testing this scenario, make sure you have checked the [shared testing instructions](./README.md#shared-testing-instructions).
 
 > [!NOTE]
 > This demo uses the Protected API in the same API Management instance as the backend. The same approach applies to any external backend that requires mTLS — only the backend URL in the Bicep configuration would differ.
@@ -39,7 +39,7 @@ resource clientCertificate 'Microsoft.ApiManagement/service/certificates@...' = 
 }
 ```
 
-Key Vault stores the certificate, and API Management references it by its secret URI. The certificate (`Unprotected API`) is part of the self-signed certificate tree described in the [demo overview](./demo.md#self-signed-client-certificates) — it is issued by `APIM Sample DEV Intermediate CA` and registered in API Management, so the Protected API will accept it.
+Key Vault stores the certificate, and API Management references it by its secret URI. The certificate (`Unprotected API`) is part of the self-signed certificate tree described in the [demo overview](./README.md#self-signed-client-certificates) — it is issued by `APIM Sample DEV Intermediate CA` and registered in API Management, so the Protected API will accept it.
 
 > [!NOTE]
 > The private key of the certificate must be exportable. API Management needs to export the private key from Key Vault to use it in the mTLS handshake. If the private key is not exportable, the deployment will fail with: `Certificate with id '...' does not contain private key`.
@@ -80,7 +80,7 @@ This wildcard routing means `GET /unprotected/validate-using-policy` is forwarde
 
 ## 2. Test the scenario
 
-Use [tests/scenario3.http](../tests/scenario3.http) for manual testing, or run `Scenario3Tests.cs` from the integration test project. See the [shared testing instructions](./demo.md#shared-testing-instructions) for setup instructions.
+Use [tests/scenario3.http](../tests/scenario3.http) for manual testing, or run `Scenario3Tests.cs` from the integration test project. See the [shared testing instructions](./README.md#shared-testing-instructions) for setup instructions.
 
 No client certificate is needed in your REST Client or test configuration — the caller connects using plain TLS. API Management attaches the certificate automatically when calling the backend.
 

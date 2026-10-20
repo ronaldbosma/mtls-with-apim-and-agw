@@ -152,8 +152,6 @@ output AZURE_RESOURCE_GROUP string = resourceGroupName
 output AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE string = agwPublicIpAddress.?outputs.ipAddress ?? ''
 output AZURE_KEY_VAULT_URI string = keyVault.outputs.vaultUri
 
-// Return which services are included in the deployment
-
 // Return settings
 output AZURE_API_MANAGEMENT_SKU string = apiManagementSku
 output AZURE_APPLICATION_GATEWAY_MTLS_MODE string = includeApplicationGateway ? applicationGatewayMtlsMode : ''

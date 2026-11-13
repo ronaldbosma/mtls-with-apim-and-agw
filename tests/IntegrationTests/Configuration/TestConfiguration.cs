@@ -9,15 +9,7 @@ namespace IntegrationTests.Configuration;
 /// </summary>
 internal class TestConfiguration
 {
-    public required Uri AzureApiManagementGatewayUrl { get; init; }
-    public required Uri AzureKeyVaultUri { get; init; }
-    public required bool CertificateChainIsValidatedInProtectedApi { get; init; }
-
-    public required bool IsApplicationGatewayIncluded { get; init; }
-    public IPAddress? ApplicationGatewayIpAddress { get; init; }
-    public bool? IsApplicationGatewayMtlsModeStrict { get; init; }
-
-    public static TestConfiguration Load()
+    private static readonly Lazy<TestConfiguration> Instance = new(() =>
     {
         AzdDotEnv.Load(optional: true); // Loads Azure Developer CLI environment variables; optional since .env file might be missing in CI/CD pipelines
 
@@ -37,5 +29,15 @@ internal class TestConfiguration
             ApplicationGatewayIpAddress = isApplicationGatewayIncluded ? configuration.GetRequiredIPAddress("AZURE_APPLICATION_GATEWAY_PUBLIC_IP_ADDRESS_VALUE") : null,
             IsApplicationGatewayMtlsModeStrict = isApplicationGatewayIncluded ? configuration.GetRequiredString("AZURE_APPLICATION_GATEWAY_MTLS_MODE") == "Strict" : null
         };
-    }
+    });
+
+    public required Uri AzureApiManagementGatewayUrl { get; init; }
+    public required Uri AzureKeyVaultUri { get; init; }
+    public required bool CertificateChainIsValidatedInProtectedApi { get; init; }
+
+    public required bool IsApplicationGatewayIncluded { get; init; }
+    public IPAddress? ApplicationGatewayIpAddress { get; init; }
+    public bool? IsApplicationGatewayMtlsModeStrict { get; init; }
+
+    public static TestConfiguration Load() => Instance.Value;
 }
